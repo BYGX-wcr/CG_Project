@@ -7,5 +7,9 @@
         <file alias="icon-pen">images/pen.png</file>
         <file alias="icon-brush-tool">images/brush-tool.png</file>
         <file alias="icon-polygon">images/polygon.png</file>
+        <file alias="icon-selection-tool">images/selection-tool.png</file>
+        <file alias="icon-horizontal-flip">images/horizontal-flip.png</file>
+        <file alias="icon-rotate-tool">images/rotate-tool.png</file>
+        <file alias="icon-vertical-flip">images/vertical-flip.png</file>
     </qresource>
 </RCC>

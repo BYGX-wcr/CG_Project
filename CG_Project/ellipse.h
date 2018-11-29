@@ -15,7 +15,9 @@ public:
     void renew(QGraphicsSceneMouseEvent *event);
     void start(QGraphicsSceneMouseEvent *event);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
+    void rotate(int angel);
+    void vflip();
+    void hflip();
 };
 
 #endif // ELLIPSE_H

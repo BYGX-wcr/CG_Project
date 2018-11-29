@@ -5,7 +5,10 @@ Shape::Shape(const QColor& penCol, int lineWidth)
     this->penCol = penCol;
     this->lineWidth = lineWidth;
     this->brushCol = Qt::white;
+    rotateAngel = 0;
     enBrush = false;
+    selected = false;
+    editFlag = Unedited;
 }
 
 void Shape::setPenColor(QColor &arg)
@@ -22,6 +25,26 @@ void Shape::setBrush(QColor& arg)
 {
     enBrush = true;
     brushCol = arg;
+}
+
+void Shape::setSelected(bool arg)
+{
+    selected = arg;
+}
+
+bool Shape::isSelected()
+{
+    return selected;
+}
+
+void Shape::setEditFlag(const EditFlag &arg)
+{
+    editFlag = arg;
+}
+
+void Shape::clearEditFlag()
+{
+    editFlag = EditFlag::Unedited;
 }
 
 QPen Shape::initPen()
@@ -122,6 +145,41 @@ void Shape::drawLine(QPainter* painter, qreal x1, qreal y1, qreal x2, qreal y2)
     }
 }
 
+void Shape::drawLine(QPainter *painter, QPointF p1, QPointF p2)
+{
+    Shape::drawLine(painter, p1.x(), p1.y(), p2.x(), p2.y());
+}
+
+void Shape::drawQudraPoints(QPainter *painter, qreal cx, qreal cy, qreal x, qreal y)
+{
+    qreal x1 = x * cos(rotateAngel) - y * sin(rotateAngel);
+    qreal y1 = x * sin(rotateAngel) + y * cos(rotateAngel);
+    qreal x2 = -x * cos(rotateAngel) - y * sin(rotateAngel);
+    qreal y2 = -x * sin(rotateAngel) + y * cos(rotateAngel);
+    qreal x3 = x * cos(rotateAngel) + y * sin(rotateAngel);
+    qreal y3 = x * sin(rotateAngel) - y * cos(rotateAngel);
+    qreal x4 = -x * cos(rotateAngel) + y * sin(rotateAngel);
+    qreal y4 = -x * sin(rotateAngel) - y * cos(rotateAngel);
+
+    painter->drawPoint(x1 + cx, y1 + cy);
+    painter->drawPoint(x2 + cx, y2 + cy);
+    painter->drawPoint(x3 + cx, y3 + cy);
+    painter->drawPoint(x4 + cx, y4 + cy);
+}
+
+void Shape::drawMarkPoint(QPainter *painter, qreal x, qreal y)
+{
+    QPen outterPen(Qt::lightGray);
+    outterPen.setWidth(lineWidth * 4);
+    painter->setPen(outterPen);
+    painter->drawPoint(x, y);;
+
+    QPen innerPen(Qt::white);
+    innerPen.setWidth(lineWidth * 2);
+    painter->setPen(innerPen);
+    painter->drawPoint(x, y);
+}
+
 void Shape::switchPoint(int &x1, int &y1, int &x2, int &y2)
 {
     int x = x1;
@@ -132,15 +190,20 @@ void Shape::switchPoint(int &x1, int &y1, int &x2, int &y2)
     y2 = y;
 }
 
+QPointF Shape::rotatePoint(qreal angel, qreal cx, qreal cy, QPointF p)
+{
+    return Shape::rotatePoint(angel, cx, cy, p.x(), p.y());
+}
+
+QPointF Shape::rotatePoint(qreal angel, qreal cx, qreal cy, qreal x, qreal y)
+{
+    qreal resx = cx + (x - cx) * cos(angel) - (y - cy) * sin(angel);
+    qreal resy = cy + (x - cx) * sin(angel) + (y - cy) * cos(angel);
+    QPointF p(resx, resy);
+    return p;
+}
+
 qreal Shape::eulicdeanDistance(QPointF p1, QPointF p2)
 {
     return sqrt(pow(p1.x() - p2.x(), 2) + pow(p1.y() - p2.y(), 2));
-}
-
-void Shape::drawQudraPoints(QPainter *painter, qreal cx, qreal cy, qreal x, qreal y)
-{
-    painter->drawPoint(x + cx, y + cy);
-    painter->drawPoint(-x + cx, y + cy);
-    painter->drawPoint(x + cx, -y + cy);
-    painter->drawPoint(-x + cx, -y + cy);
 }

@@ -2,18 +2,20 @@
 
 PaintWidget::PaintWidget(QWidget *parent) : QGraphicsScene(parent)
 {
-    currentShape = Shape::Line;
+    currentTool = Shape::Line;
     currentPenColor = Qt::black;
     currentBrushColor = Qt::blue;
-    currentItem = NULL;
-    penWidth = 1;
+    currentShape = NULL;
+    penWidth = 2;
+    rotateAngel = 0;
     drawing = false;
     enBrush = false;
+    multiSelecting = false;
 }
 
-void PaintWidget::setCurrentShape(Shape::Type arg)
+void PaintWidget::setCurrentTool(Shape::Type arg)
 {
-    currentShape = arg;
+    currentTool = arg;
 }
 
 void PaintWidget::setCurrentPenColor(QPalette arg)
@@ -31,9 +33,53 @@ void PaintWidget::setPenWidth(int arg)
     penWidth = arg;
 }
 
+void PaintWidget::setRotateAngel(int arg)
+{
+    rotateAngel = arg;
+}
+
 void PaintWidget::toggleBrushState(bool checked)
 {
     enBrush = checked;
+}
+
+void PaintWidget::rotateShapes()
+{
+    QList<Shape*>::iterator it = selectedShapes.begin();
+    while (it != selectedShapes.end())
+    {
+        (*it)->rotate(rotateAngel);
+
+        ++it;
+    }
+
+    update();
+}
+
+void PaintWidget::vflipShapes()
+{
+    QList<Shape*>::iterator it = selectedShapes.begin();
+    while (it != selectedShapes.end())
+    {
+        (*it)->vflip();
+
+        ++it;
+    }
+
+    update();
+}
+
+void PaintWidget::hflipShapes()
+{
+    QList<Shape*>::iterator it = selectedShapes.begin();
+    while (it != selectedShapes.end())
+    {
+        (*it)->hflip();
+
+        ++it;
+    }
+
+    update();
 }
 
 int PaintWidget::getPenWidth()
@@ -60,51 +106,119 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!drawing)
     {//generate a new item
-        switch(currentShape)
+        if (currentTool != Shape::SelectTool)
         {
-        case Shape::Line: { Line* newItem = new Line; currentItem = newItem; addItem(newItem); break; }
-        case Shape::Ellipse: { Ellipse* newItem = new Ellipse; currentItem = newItem; addItem(newItem); break; }
-        case Shape::Rectangle: { Rectangle* newItem = new Rectangle; currentItem = newItem; addItem(newItem); break; }
-        case Shape::Polygon: { Polygon* newItem = new Polygon; currentItem = newItem; addItem(newItem); break;}
-        }
+            switch(currentTool)
+            {
+            case Shape::Line: { Line* newItem = new Line; currentShape = newItem; addItem(newItem); break; }
+            case Shape::Ellipse: { Ellipse* newItem = new Ellipse; currentShape = newItem; addItem(newItem); break; }
+            case Shape::Rectangle: { Rectangle* newItem = new Rectangle; currentShape = newItem; addItem(newItem); break; }
+            case Shape::Polygon: { Polygon* newItem = new Polygon; currentShape = newItem; addItem(newItem); break;}
+            }
 
-        if (currentItem != NULL)
-        {//start to draw a new shape
-            drawing = true;
-            currentItem->start(event);
-            currentItem->setPenColor(currentPenColor);
-            currentItem->setLineWidth(penWidth);
-            if (enBrush)
-                currentItem->setBrush(currentBrushColor);
+            if (currentShape != NULL)
+            {//start to draw a new shape
+                drawing = true;
+                currentShape->start(event);
+                currentShape->setPenColor(currentPenColor);
+                currentShape->setLineWidth(penWidth);
+                if (enBrush)
+                    currentShape->setBrush(currentBrushColor);
+            }
+            event->accept();
+        }
+        else
+        {
+            if (currentTool == Shape::SelectTool)
+            {
+                QGraphicsItem *ptr = itemAt(event->scenePos(), QTransform());
+                currentShape = dynamic_cast<Shape*>(ptr);
+                if (ptr == NULL && !multiSelecting)
+                {//cancel selecting items
+                    clearSelectedShapes();
+                }
+                else if (currentShape != NULL)
+                {
+                    if (!multiSelecting)
+                    {//cancel selecting items
+                        clearSelectedShapes();
+                    }
+
+                    if (!currentShape->isSelected())
+                    {
+                        currentShape->setSelected(true);
+                        selectedShapes.push_back(currentShape);
+                    }
+                }
+            }
+
+            QGraphicsScene::mousePressEvent(event);
         }
     }
 
-    QGraphicsScene::mousePressEvent(event);
+    update();
 }
 void PaintWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (drawing)
     {
-        currentItem->renew(event);
+        currentShape->renew(event);
+    }
+    else if (currentTool == Shape::SelectTool)
+    {
+        QGraphicsScene::mouseMoveEvent(event);
     }
 
-    QGraphicsScene::mouseMoveEvent(event);
+    update();
 }
 void PaintWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (currentShape == Shape::Polygon)
+    if (currentTool == Shape::Polygon)
     {
-        Polygon* newPolygon = static_cast<Polygon *>(currentItem);
+        Polygon* newPolygon = static_cast<Polygon *>(currentShape);
         newPolygon->addVertex(event);
         if (newPolygon->isOcclusive())
         {
             drawing = false;
         }
     }
+    else if (currentTool == Shape::SelectTool)
+    {
+        QGraphicsScene::mouseReleaseEvent(event);
+    }
     else
     {
         drawing = false;
     }
 
-    QGraphicsScene::mouseReleaseEvent(event);
+    update();
+}
+
+void PaintWidget::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Control:
+        multiSelecting = true;
+        break;
+    default:
+        break;
+    }
+}
+void PaintWidget::keyReleaseEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Control:
+        multiSelecting = false;
+        break;
+    default:
+        break;
+    }
+}
+
+void PaintWidget::clearSelectedShapes() {
+    for (QList<Shape*>::iterator it = selectedShapes.begin(); it != selectedShapes.end(); ++it)
+    {
+        (*it)->setSelected(false);
+    }
+    selectedShapes.clear();
 }

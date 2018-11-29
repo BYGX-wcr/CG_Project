@@ -2,6 +2,7 @@
 #define PAINTWIDGET_H
 
 #include <QGraphicsScene>
+#include <QKeyEvent>
 #include <QWidget>
 #include <QDebug>
 #include "shape.h"
@@ -17,11 +18,15 @@ class PaintWidget : public QGraphicsScene
 public:
     PaintWidget(QWidget *parent);
 
-    void setCurrentShape(Shape::Type arg);
+    void setCurrentTool(Shape::Type arg);
     void setCurrentPenColor(QPalette arg);
     void setCurrentBrushColor(QPalette arg);
     void setPenWidth(int arg);
+    void setRotateAngel(int arg);
     void toggleBrushState(bool checked);
+    void rotateShapes();
+    void vflipShapes();
+    void hflipShapes();
 
     int getPenWidth();
     QColor getPenColor();
@@ -33,16 +38,24 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
+    void clearSelectedShapes();
+
 private:
-    Shape::Type currentShape;
+    Shape::Type currentTool;
     QColor currentPenColor;
     QColor currentBrushColor;
     int penWidth;
-    Shape* currentItem;
+    Shape* currentShape;
+    QList<Shape*> selectedShapes;
+    int rotateAngel;
 
     //Flags
     bool drawing;
     bool enBrush;
+    bool multiSelecting;
 };
 
 #endif // PAINTWIDGET_H

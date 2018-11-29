@@ -4,13 +4,29 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
+    //initialize paint area
+    paintWidget = new PaintWidget(this);
+    QGraphicsView *view = new QGraphicsView(paintWidget, this);
+    paintWidget->setSceneRect(0, 0, 1280, 720);
+    this->setCentralWidget(view);
+    this->setWindowTitle("Computer Graphics Project: Painter");
+
+    connect(this, &MainWindow::changeCurrentTool, paintWidget, &PaintWidget::setCurrentTool);
+    connect(this, &MainWindow::changeCurrentPenColor, paintWidget, &PaintWidget::setCurrentPenColor);
+    connect(this, &MainWindow::changeCurrentBrushColor, paintWidget, &PaintWidget::setCurrentBrushColor);
+    connect(this, &MainWindow::rotateShapes, paintWidget, &PaintWidget::rotateShapes);
+    connect(this, &MainWindow::vflipShapes, paintWidget, &PaintWidget::vflipShapes);
+    connect(this, &MainWindow::hflipShapes, paintWidget, &PaintWidget::hflipShapes);
+
     //Initialize Main Window
     menuBar();
-    QToolBar* toolBar = addToolBar("&Tools");
     QLabel *statusLabel = new QLabel(this);
+    QToolBar* toolBar = NULL;
     statusBar()->addWidget(statusLabel);
 
-    //Initialize Tool Bar
+    //Initialize the Draw Tool Bar
+     toolBar = addToolBar(tr("&Draw Tools"));
+
     QAction *drawLineAction = new QAction(QIcon(":/icon/icon-line"), tr("&Line"), toolBar);
     drawLineAction->setStatusTip("Draw a line");
     toolBar->addAction(drawLineAction);
@@ -36,36 +52,75 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(brushToolAction);
     connect(brushToolAction, &QAction::triggered, this, &MainWindow::openBrushDialog);
 
-    //initialize paint area
-    paintWidget = new PaintWidget(this);
-    QGraphicsView *view = new QGraphicsView(paintWidget, this);
-    paintWidget->setSceneRect(0, 0, 1280, 720);
-    this->setCentralWidget(view);
-    this->setWindowTitle("Computer Graphics Project: Painter");
+    //Initialize the Edit Tool Bar
+    toolBar = addToolBar(tr("&Edit Tools"));
 
-    connect(this, &MainWindow::changeCurrentShape, paintWidget, &PaintWidget::setCurrentShape);
-    connect(this,&MainWindow::changeCurrentPenColor, paintWidget, &PaintWidget::setCurrentPenColor);
-    connect(this,&MainWindow::changeCurrentBrushColor, paintWidget, &PaintWidget::setCurrentBrushColor);
+    QAction *selectionAction = new QAction(QIcon(":/icon/icon-selection-tool"), tr("Selection Tool"), toolBar);
+    selectionAction->setStatusTip("Select & Edit items");
+    toolBar->addAction(selectionAction);
+    connect(selectionAction, &QAction::triggered, this, &MainWindow::selectionToolTriggered);
+
+    QAction *rotateAction = new QAction(QIcon(":/icon/icon-rotate-tool"), tr("Rotation Tool"), toolBar);
+    rotateAction->setStatusTip("Rotate items");
+    toolBar->addAction(rotateAction);
+    connect(rotateAction, &QAction::triggered, this, &MainWindow::rotateToolTriggered);
+    QSpinBox *rotateBox = new QSpinBox(toolBar);
+    rotateBox->setToolTip("Rotate Angel");
+    rotateBox->setStatusTip("Set the Rotate Angel");
+    rotateBox->setFixedWidth(60);
+    rotateBox->setMaximum(359);
+    rotateBox->setMinimum(-359);
+    toolBar->addWidget(rotateBox);
+    connect(rotateBox, QOverload<int>::of(&QSpinBox::valueChanged), paintWidget, &PaintWidget::setRotateAngel);
+
+    QAction *vflipAction = new QAction(QIcon(":/icon/icon-vertical-flip"), tr("Vertical Flip Tool"), toolBar);
+    vflipAction->setStatusTip("Flip items vertically");
+    toolBar->addAction(vflipAction);
+    connect(vflipAction, &QAction::triggered, this, &MainWindow::vflipToolTriggered);
+
+    QAction *hflipAction = new QAction(QIcon(":/icon/icon-horizontal-flip"), tr("Horizontal Flip Tool"), toolBar);
+    vflipAction->setStatusTip("Flip items horizontally");
+    toolBar->addAction(hflipAction);
+    connect(hflipAction, &QAction::triggered, this, &MainWindow::hflipToolTriggered);
 }
 
 void MainWindow::drawLineTriggered()
 {
-    emit changeCurrentShape(Shape::Line);
+    emit changeCurrentTool(Shape::Line);
 }
 
 void MainWindow::drawEllipseTriggered()
 {
-    emit changeCurrentShape(Shape::Ellipse);
+    emit changeCurrentTool(Shape::Ellipse);
 }
 
 void MainWindow::drawRectTriggered()
 {
-    emit changeCurrentShape(Shape::Rectangle);
+    emit changeCurrentTool(Shape::Rectangle);
 }
 
 void MainWindow::drawPolygonTriggered()
 {
-    emit changeCurrentShape(Shape::Polygon);
+    emit changeCurrentTool(Shape::Polygon);
+}
+
+void MainWindow::selectionToolTriggered()
+{
+    emit changeCurrentTool(Shape::SelectTool);
+}
+
+void MainWindow::rotateToolTriggered()
+{
+    emit rotateShapes();
+}
+
+void MainWindow::vflipToolTriggered()
+{
+    emit vflipShapes();
+}
+void MainWindow::hflipToolTriggered()
+{
+    emit hflipShapes();
 }
 
 void MainWindow::openPenColorDialog()

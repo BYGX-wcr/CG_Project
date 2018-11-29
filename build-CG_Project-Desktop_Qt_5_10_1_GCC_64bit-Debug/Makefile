@@ -707,8 +707,12 @@ qrc_mainresource.cpp: ../CG_Project/mainresource.qrc \
 		../CG_Project/images/palette.png \
 		../CG_Project/images/rectangle.png \
 		../CG_Project/images/brush-tool.png \
+		../CG_Project/images/horizontal-flip.png \
+		../CG_Project/images/vertical-flip.png \
 		../CG_Project/images/pen.png \
-		../CG_Project/images/polygon.png
+		../CG_Project/images/selection-tool.png \
+		../CG_Project/images/polygon.png \
+		../CG_Project/images/rotate-tool.png
 	/home/wcr/Qt5.10.1/5.10.1/gcc_64/bin/rcc -name mainresource ../CG_Project/mainresource.qrc -o qrc_mainresource.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h
@@ -865,12 +869,21 @@ moc_mainwindow.cpp: ../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QMainWindow \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qcolordialog.h \
 		../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
@@ -970,15 +983,9 @@ moc_paintwidget.cpp: ../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSce
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
@@ -992,13 +999,28 @@ moc_paintwidget.cpp: ../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSce
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
@@ -1176,12 +1198,21 @@ main.o: ../CG_Project/main.cpp ../CG_Project/mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qcolordialog.h \
 		../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
@@ -1191,14 +1222,7 @@ main.o: ../CG_Project/main.cpp ../CG_Project/mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../CG_Project/main.cpp
 
 mainwindow.o: ../CG_Project/mainwindow.cpp ../CG_Project/mainwindow.h \
@@ -1347,12 +1371,21 @@ mainwindow.o: ../CG_Project/mainwindow.cpp ../CG_Project/mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qcolordialog.h \
 		../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
@@ -1365,13 +1398,6 @@ mainwindow.o: ../CG_Project/mainwindow.cpp ../CG_Project/mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
 		ui_mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVariant \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QButtonGroup \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qbuttongroup.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QHeaderView \
@@ -1396,8 +1422,8 @@ mainwindow.o: ../CG_Project/mainwindow.cpp ../CG_Project/mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../CG_Project/mainwindow.cpp
 
 shape.o: ../CG_Project/shape.cpp ../CG_Project/shape.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtguiglobal.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qglobal.h \
@@ -1423,19 +1449,20 @@ shape.o: ../CG_Project/shape.cpp ../CG_Project/shape.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qversiontagging.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtgui-config.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qnamespace.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstring.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qchar.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qbytearray.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrefcount.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qnamespace.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qarraydata.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringliteral.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringalgorithms.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringview.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringbuilder.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlist.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qalgorithms.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qiterator.h \
@@ -1451,27 +1478,32 @@ shape.o: ../CG_Project/shape.cpp ../CG_Project/shape.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvarlengtharray.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontainerfwd.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs_win.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qpoint.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrect.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmargins.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsize.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvector.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmargins.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpaintdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrect.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcolor.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qrgb.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qrgba64.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvector.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qmatrix.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpolygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qregion.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs_win.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdatastream.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qiodevice.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qline.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtransform.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainterpath.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qimage.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpaintdevice.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixelformat.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixmap.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer.h \
@@ -1479,22 +1511,36 @@ shape.o: ../CG_Project/shape.cpp ../CG_Project/shape.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qhash.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtextstream.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlocale.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qset.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurlquery.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfile.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qset.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtextstream.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlocale.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontiguouscache.h
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o shape.o ../CG_Project/shape.cpp
 
 paintwidget.o: ../CG_Project/paintwidget.cpp ../CG_Project/paintwidget.h \
@@ -1582,15 +1628,9 @@ paintwidget.o: ../CG_Project/paintwidget.cpp ../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
@@ -1604,13 +1644,28 @@ paintwidget.o: ../CG_Project/paintwidget.cpp ../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
@@ -1721,11 +1776,31 @@ line.o: ../CG_Project/line.cpp ../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
 		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurlquery.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfile.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o line.o ../CG_Project/line.cpp
 
 ellipse.o: ../CG_Project/ellipse.cpp ../CG_Project/ellipse.h \
@@ -1818,19 +1893,39 @@ ellipse.o: ../CG_Project/ellipse.cpp ../CG_Project/ellipse.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixelformat.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtransform.h \
 		../CG_Project/shape.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurlquery.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfile.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ellipse.o ../CG_Project/ellipse.cpp
 
 rectangle.o: ../CG_Project/rectangle.cpp ../CG_Project/rectangle.h \
@@ -1923,25 +2018,45 @@ rectangle.o: ../CG_Project/rectangle.cpp ../CG_Project/rectangle.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixelformat.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtransform.h \
 		../CG_Project/shape.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurlquery.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfile.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rectangle.o ../CG_Project/rectangle.cpp
 
 polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
 		../CG_Project/shape.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtguiglobal.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qglobal.h \
@@ -1967,19 +2082,20 @@ polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qversiontagging.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtgui-config.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qnamespace.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstring.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qchar.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qbytearray.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrefcount.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qnamespace.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qarraydata.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringliteral.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringalgorithms.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringview.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringbuilder.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlist.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qalgorithms.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qiterator.h \
@@ -1995,27 +2111,32 @@ polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvarlengtharray.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontainerfwd.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs_win.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qpoint.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrect.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmargins.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsize.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvector.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmargins.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpaintdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrect.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcolor.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qrgb.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qrgba64.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvector.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qmatrix.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpolygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qregion.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs_win.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdatastream.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qiodevice.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qline.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtransform.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainterpath.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qimage.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpaintdevice.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixelformat.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixmap.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer.h \
@@ -2023,22 +2144,36 @@ polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qhash.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtextstream.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlocale.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qset.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurlquery.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfile.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qset.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtextstream.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlocale.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector

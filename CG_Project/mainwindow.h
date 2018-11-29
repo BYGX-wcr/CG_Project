@@ -33,9 +33,12 @@ public:
     }
 
 signals:
-    void changeCurrentShape(Shape::Type arg);
+    void changeCurrentTool(Shape::Type arg);
     void changeCurrentPenColor(QPalette arg);
     void changeCurrentBrushColor(QPalette arg);
+    void rotateShapes();
+    void vflipShapes();
+    void hflipShapes();
 
 private:
     PaintWidget *paintWidget;
@@ -45,6 +48,10 @@ private:
     void drawEllipseTriggered();
     void drawRectTriggered();
     void drawPolygonTriggered();
+    void selectionToolTriggered();
+    void rotateToolTriggered();
+    void vflipToolTriggered();
+    void hflipToolTriggered();
 
     void openPenColorDialog();
     void openBrushColorDialog();

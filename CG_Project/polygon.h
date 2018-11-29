@@ -38,6 +38,10 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void fillPolygon(QPainter *painter);
 
+    void rotate(int angel);
+    void vflip();
+    void hflip();
+
     bool isOcclusive();
 };
 

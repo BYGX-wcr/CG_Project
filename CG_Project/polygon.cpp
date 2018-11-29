@@ -140,6 +140,34 @@ void Polygon::fillPolygon(QPainter *painter)
     }
 }
 
+void Polygon::rotate(int angel)
+{
+    rotateAngel = (angel / 180) * PI;
+    QVector<QPointF>::iterator it = vertexList.begin();
+    qreal cx = (boundingRect().topLeft().x() + boundingRect().bottomRight().x()) / 2;
+    qreal cy = (boundingRect().topLeft().y() + boundingRect().bottomRight().y()) / 2;
+    while (it != vertexList.end())
+    {
+        QPointF p(cx + (it->x() - cx) * cos(rotateAngel) - (it->y() - cy) * sin(rotateAngel), cy + (it->x() - cx) * sin(rotateAngel) + (it->y() - cy) * cos(rotateAngel));
+        *it = p;
+        ++it;
+    }
+
+    QPolygonF newPoly(vertexList);
+    setPolygon(newPoly);
+    prepareGeometryChange();
+}
+
+void Polygon::vflip()
+{
+    //
+}
+
+void Polygon::hflip()
+{
+    //
+}
+
 bool Polygon::isOcclusive()
 {
     if (vertexList.size() >= 3 && vertexList.front() == vertexList.back())

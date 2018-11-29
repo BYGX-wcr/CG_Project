@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[7];
-    char stringdata0[93];
+    QByteArrayData data[10];
+    char stringdata0[129];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,17 +32,21 @@ struct qt_meta_stringdata_MainWindow_t {
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10), // "MainWindow"
-QT_MOC_LITERAL(1, 11, 18), // "changeCurrentShape"
-QT_MOC_LITERAL(2, 30, 0), // ""
-QT_MOC_LITERAL(3, 31, 11), // "Shape::Type"
-QT_MOC_LITERAL(4, 43, 3), // "arg"
-QT_MOC_LITERAL(5, 47, 21), // "changeCurrentPenColor"
-QT_MOC_LITERAL(6, 69, 23) // "changeCurrentBrushColor"
+QT_MOC_LITERAL(1, 11, 17), // "changeCurrentTool"
+QT_MOC_LITERAL(2, 29, 0), // ""
+QT_MOC_LITERAL(3, 30, 11), // "Shape::Type"
+QT_MOC_LITERAL(4, 42, 3), // "arg"
+QT_MOC_LITERAL(5, 46, 21), // "changeCurrentPenColor"
+QT_MOC_LITERAL(6, 68, 23), // "changeCurrentBrushColor"
+QT_MOC_LITERAL(7, 92, 12), // "rotateShapes"
+QT_MOC_LITERAL(8, 105, 11), // "vflipShapes"
+QT_MOC_LITERAL(9, 117, 11) // "hflipShapes"
 
     },
-    "MainWindow\0changeCurrentShape\0\0"
-    "Shape::Type\0arg\0changeCurrentPenColor\0"
-    "changeCurrentBrushColor"
+    "MainWindow\0changeCurrentTool\0\0Shape::Type\0"
+    "arg\0changeCurrentPenColor\0"
+    "changeCurrentBrushColor\0rotateShapes\0"
+    "vflipShapes\0hflipShapes"
 };
 #undef QT_MOC_LITERAL
 
@@ -52,22 +56,28 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       3,       // signalCount
+       6,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   29,    2, 0x06 /* Public */,
-       5,    1,   32,    2, 0x06 /* Public */,
-       6,    1,   35,    2, 0x06 /* Public */,
+       1,    1,   44,    2, 0x06 /* Public */,
+       5,    1,   47,    2, 0x06 /* Public */,
+       6,    1,   50,    2, 0x06 /* Public */,
+       7,    0,   53,    2, 0x06 /* Public */,
+       8,    0,   54,    2, 0x06 /* Public */,
+       9,    0,   55,    2, 0x06 /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void, QMetaType::QPalette,    4,
     QMetaType::Void, QMetaType::QPalette,    4,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -78,16 +88,19 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         MainWindow *_t = static_cast<MainWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->changeCurrentShape((*reinterpret_cast< Shape::Type(*)>(_a[1]))); break;
+        case 0: _t->changeCurrentTool((*reinterpret_cast< Shape::Type(*)>(_a[1]))); break;
         case 1: _t->changeCurrentPenColor((*reinterpret_cast< QPalette(*)>(_a[1]))); break;
         case 2: _t->changeCurrentBrushColor((*reinterpret_cast< QPalette(*)>(_a[1]))); break;
+        case 3: _t->rotateShapes(); break;
+        case 4: _t->vflipShapes(); break;
+        case 5: _t->hflipShapes(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
             typedef void (MainWindow::*_t)(Shape::Type );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::changeCurrentShape)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::changeCurrentTool)) {
                 *result = 0;
                 return;
             }
@@ -103,6 +116,27 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             typedef void (MainWindow::*_t)(QPalette );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::changeCurrentBrushColor)) {
                 *result = 2;
+                return;
+            }
+        }
+        {
+            typedef void (MainWindow::*_t)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::rotateShapes)) {
+                *result = 3;
+                return;
+            }
+        }
+        {
+            typedef void (MainWindow::*_t)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::vflipShapes)) {
+                *result = 4;
+                return;
+            }
+        }
+        {
+            typedef void (MainWindow::*_t)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::hflipShapes)) {
+                *result = 5;
                 return;
             }
         }
@@ -134,19 +168,19 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 6;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 6)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 6;
     }
     return _id;
 }
 
 // SIGNAL 0
-void MainWindow::changeCurrentShape(Shape::Type _t1)
+void MainWindow::changeCurrentTool(Shape::Type _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
@@ -164,6 +198,24 @@ void MainWindow::changeCurrentBrushColor(QPalette _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void MainWindow::rotateShapes()
+{
+    QMetaObject::activate(this, &staticMetaObject, 3, nullptr);
+}
+
+// SIGNAL 4
+void MainWindow::vflipShapes()
+{
+    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
+}
+
+// SIGNAL 5
+void MainWindow::hflipShapes()
+{
+    QMetaObject::activate(this, &staticMetaObject, 5, nullptr);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE
