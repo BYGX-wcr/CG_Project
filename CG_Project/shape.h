@@ -9,6 +9,7 @@
 #include <QCursor>
 #include <cmath>
 #include <vector>
+//#include "paintwidget.h"
 using namespace std;
 
 #define MAX_VALUE(x, y) x > y ? x : y
@@ -52,7 +53,7 @@ protected:
     QColor penCol;
     QColor brushCol;
     uint32_t lineWidth;
-    qreal rotateAngel; //radian measure
+    qreal rotateAngel; //degree measure
     bool enBrush;
     bool selected;
     Shape::EditFlag editFlag;

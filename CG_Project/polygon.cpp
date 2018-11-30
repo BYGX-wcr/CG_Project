@@ -1,4 +1,5 @@
 #include "polygon.h"
+#include "paintwidget.h"
 
 Polygon::Polygon()
 {
@@ -58,6 +59,14 @@ void Polygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 
         if (enBrush)
             fillPolygon(painter);
+    }
+
+    if (selected)
+    {
+        for (int i = 0; i < vertexList.size() - 1; ++i)
+        {
+            Shape::drawMarkPoint(painter, vertexList[i].x(), vertexList[i].y());
+        }
     }
 }
 
@@ -142,13 +151,13 @@ void Polygon::fillPolygon(QPainter *painter)
 
 void Polygon::rotate(int angel)
 {
-    rotateAngel = (angel / 180) * PI;
+    rotateAngel = angel;
     QVector<QPointF>::iterator it = vertexList.begin();
     qreal cx = (boundingRect().topLeft().x() + boundingRect().bottomRight().x()) / 2;
     qreal cy = (boundingRect().topLeft().y() + boundingRect().bottomRight().y()) / 2;
     while (it != vertexList.end())
     {
-        QPointF p(cx + (it->x() - cx) * cos(rotateAngel) - (it->y() - cy) * sin(rotateAngel), cy + (it->x() - cx) * sin(rotateAngel) + (it->y() - cy) * cos(rotateAngel));
+        QPointF p(Shape::rotatePoint(rotateAngel, cx, cy, it->x(), it->y()));
         *it = p;
         ++it;
     }
@@ -160,12 +169,30 @@ void Polygon::rotate(int angel)
 
 void Polygon::vflip()
 {
-    //
+    qreal axis = boundingRect().bottom();
+    for (int i = 0; i < vertexList.size(); ++i)
+    {
+        QPointF p(vertexList[i].x(), 2 * axis - vertexList[i].y());
+        vertexList[i] = p;
+    }
+
+    QPolygonF newPoly(vertexList);
+    setPolygon(newPoly);
+    prepareGeometryChange();
 }
 
 void Polygon::hflip()
 {
-    //
+    qreal axis = boundingRect().right();
+    for (int i = 0; i < vertexList.size(); ++i)
+    {
+        QPointF p(2 * axis - vertexList[i].x(), vertexList[i].y());
+        vertexList[i] = p;
+    }
+
+    QPolygonF newPoly(vertexList);
+    setPolygon(newPoly);
+    prepareGeometryChange();
 }
 
 bool Polygon::isOcclusive()
@@ -174,4 +201,82 @@ bool Polygon::isOcclusive()
         return true;
     else
         return false;
+}
+
+void Polygon::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene* parent = scene();
+    PaintWidget* paintWidget = dynamic_cast<PaintWidget*> (parent);
+    if (!selected)
+    {
+        if (paintWidget == NULL) return;
+
+        if (!paintWidget->isMultiSelecting()) paintWidget->clearSelectedShapes();
+        paintWidget->addSelectedShape(this);
+        paintWidget->setCurrentShape(this);
+        selected = true;
+    }
+    paintWidget->setCurrentShape(this);
+
+    if (isOcclusive())
+    {
+        if (event->button() == Qt::LeftButton)
+        {//select this item & move
+            setCursor(Qt::ClosedHandCursor);
+            setEditFlag(Shape::Moving);
+            originVertex = vertexList;
+        }
+        else if (event->button() == Qt::RightButton)
+        {
+            for (int i = 0; i < vertexList.size() - 1; ++i)
+            {
+                if (Shape::eulicdeanDistance(mapFromScene(event->scenePos()), vertexList[i]) <= lineWidth)
+                {//edit an vertex
+                    setCursor(Qt::CrossCursor);
+                    setEditFlag(Shape::VertexEditing);
+                    editPoint = i;
+                    return;
+                }
+            }
+        }
+    }
+}
+void Polygon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (isOcclusive())
+    {
+        if (this->editFlag == Shape::Moving)
+        {
+            if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance())
+            {
+                  return;
+            }
+
+            QPointF dp = (event->scenePos() - event->buttonDownScenePos(Qt::LeftButton));
+            for (int i = 0; i < originVertex.size(); ++i)
+            {
+                vertexList[i] = originVertex[i] + dp;
+            }
+            setPolygon(QPolygonF(vertexList));
+            prepareGeometryChange();
+        }
+        else if (this->editFlag == Shape::VertexEditing)
+        {
+            if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::RightButton)).length() < QApplication::startDragDistance())
+            {
+                  return;
+            }
+
+            vertexList[editPoint] = mapFromScene(event->scenePos());
+            if (editPoint == 0) vertexList.back() = vertexList.front();
+            setPolygon(QPolygonF(vertexList));
+            prepareGeometryChange();
+        }
+    }
+}
+void Polygon::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    setCursor(Qt::ArrowCursor);
+    clearEditFlag();
+    prepareGeometryChange();
 }

@@ -1,4 +1,5 @@
 #include "line.h"
+#include "paintwidget.h"
 
 Line::Line()
 {
@@ -18,7 +19,7 @@ void Line::renew(QGraphicsSceneMouseEvent* event)
 
 void Line::rotate(int angel)
 {
-    rotateAngel = (angel / 180.0) * PI;
+    rotateAngel = angel;
 
     qreal x1 = line().x1();
     qreal y1 = line().y1();
@@ -27,10 +28,8 @@ void Line::rotate(int angel)
     qreal cx = (x1 + x2) / 2;
     qreal cy = (y1 + y2) / 2;
 
-    qDebug() << "Rotate:" << rotateAngel;
-    qDebug() << "Before:" << line();
-    setLine(cx + (x1 - cx) * cos(rotateAngel) - (y1 - cy) * sin(rotateAngel), cy + (x1 - cx) * sin(rotateAngel) + (y1 - cy) * cos(rotateAngel), cx + (x2 - cx) * cos(rotateAngel) - (y2 - cy) * sin(rotateAngel), cy + (x2 - cx) * sin(rotateAngel) + (y2 - cy) * cos(rotateAngel));
-    qDebug() << "After:" << line();
+    //setLine(cx + (x1 - cx) * cos(rotateAngel) - (y1 - cy) * sin(rotateAngel), cy + (x1 - cx) * sin(rotateAngel) + (y1 - cy) * cos(rotateAngel), cx + (x2 - cx) * cos(rotateAngel) - (y2 - cy) * sin(rotateAngel), cy + (x2 - cx) * sin(rotateAngel) + (y2 - cy) * cos(rotateAngel));
+    setLine(QLineF(Shape::rotatePoint(rotateAngel, cx, cy, x1, y1), Shape::rotatePoint(rotateAngel, cx, cy, x2, y2)));
 
     prepareGeometryChange();
 }
@@ -88,6 +87,19 @@ void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    QGraphicsScene* parent = scene();
+    PaintWidget* paintWidget = dynamic_cast<PaintWidget*> (parent);
+    if (!selected)
+    {
+        if (paintWidget == NULL) return;
+
+        if (!paintWidget->isMultiSelecting()) paintWidget->clearSelectedShapes();
+        paintWidget->addSelectedShape(this);
+        paintWidget->setCurrentShape(this);
+        selected = true;
+    }
+    paintWidget->setCurrentShape(this);
+
     if (event->button() == Qt::LeftButton)
     {//select this item & move
         setCursor(Qt::ClosedHandCursor);

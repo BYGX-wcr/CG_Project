@@ -33,6 +33,11 @@ public:
     QColor getBrushColor();
     bool getBrushStatus();
 
+    void clearSelectedShapes();
+    void addSelectedShape(Shape* arg);
+    void setCurrentShape(Shape* arg);
+    bool isMultiSelecting();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -40,8 +45,6 @@ protected:
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
-
-    void clearSelectedShapes();
 
 private:
     Shape::Type currentTool;

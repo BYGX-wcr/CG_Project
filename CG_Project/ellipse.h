@@ -7,7 +7,12 @@
 class Ellipse : public Shape, public QGraphicsEllipseItem
 {
 protected:
-    QPointF startPoint;
+    QPointF fixedPoint;
+    QRectF originRect;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public:
     Ellipse();
@@ -18,6 +23,7 @@ public:
     void rotate(int angel);
     void vflip();
     void hflip();
+
 };
 
 #endif // ELLIPSE_H

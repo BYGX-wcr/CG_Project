@@ -1,4 +1,5 @@
 #include "rectangle.h"
+#include "paintwidget.h"
 
 Rectangle::Rectangle()
 {
@@ -6,71 +7,218 @@ Rectangle::Rectangle()
 
 void Rectangle::start(QGraphicsSceneMouseEvent *event)
 {
-    startPoint = mapFromScene(event->scenePos());
+    fixedPoint = mapFromScene(event->scenePos());
     setRect(mapFromScene(event->scenePos()).x(), mapFromScene(event->scenePos()).y(), 0, 0);
 }
 
 void Rectangle::renew(QGraphicsSceneMouseEvent *event)
 {
     QPointF newPoint = mapFromScene(event->scenePos());
-    qreal w = fabs(startPoint.x() - newPoint.x());
-    qreal h = fabs(startPoint.y() - newPoint.y());
+    qreal w = fabs(fixedPoint.x() - newPoint.x());
+    qreal h = fabs(fixedPoint.y() - newPoint.y());
 
-    setRect(MIN_VALUE(startPoint.x(), newPoint.x()), MIN_VALUE(startPoint.y(), newPoint.y()), w, h);
+    setRect(MIN_VALUE(fixedPoint.x(), newPoint.x()), MIN_VALUE(fixedPoint.y(), newPoint.y()), w, h);
+    originRect = rect();
     prepareGeometryChange();
 }
 
 void Rectangle::rotate(int angel)
 {
-    rotateAngel += (angel / 180) * PI;
+    rotateAngel += angel;
+
+    qreal cx = (rect().left() + rect().right()) / 2;
+    qreal cy = (rect().top() + rect().bottom()) / 2;
+    setTransformOriginPoint(cx, cy);
     setRotation(rotateAngel);
     prepareGeometryChange();
 }
 
 void Rectangle::vflip()
 {
-    //
+    qreal axis = rect().bottomRight().y();
+    setRect(rect().left(), axis, rect().width(), rect().height());
+    prepareGeometryChange();
 }
 
 void Rectangle::hflip()
 {
-    //
+    qreal axis = rect().bottomRight().x();
+    setRect(axis, rect().top(), rect().width(), rect().height());
+    prepareGeometryChange();
 }
 
 void Rectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(initPen());
 
-    qreal x_1 = mapToParent(rect().topLeft()).x();
-    qreal y_1 = mapToParent(rect().topLeft()).y();
-    qreal x_2 = mapToParent(rect().bottomRight()).x();
-    qreal y_2 = mapToParent(rect().bottomRight()).y();
+    //painter->rotate(-rotation());
+    rotateAngel = 0;
+    originRect = rect();
+    qreal x1 = (originRect.topLeft()).x();
+    qreal y1 = (originRect.topLeft()).y();
+    qreal x2 = (originRect.bottomRight()).x() - 1;
+    qreal y2 = (originRect.bottomRight()).y() - 1;
+    qreal cx = (originRect.left() + originRect.right()) / 2;
+    qreal cy = (originRect.top() + originRect.bottom()) / 2;
 
-    qreal cx = (x_1 + x_2) / 2;
-    qreal cy = (y_1 + y_2) / 2;
-    qreal x1 = cx + (x_1 - cx) * cos(rotateAngel) - (y_1 - cy) * sin(rotateAngel);
-    qreal y1 = cy + (x_1 - cx) * sin(rotateAngel) + (y_1 - cy) * cos(rotateAngel);
-    qreal x2 = cx + (x_2 - cx) * cos(rotateAngel) - (y_2 - cy) * sin(rotateAngel);
-    qreal y2 = cy + (x_2 - cx) * sin(rotateAngel) + (y_2 - cy) * cos(rotateAngel);
-    if (x_1 == x_2 || y_1 == y_2)
+    if (!(x1 == x2 || y1 == y2))
     {
-        Shape::drawLine(painter, x1, y1, x2, y2);
-    }
-    else
-    {
-        Shape::drawLine(painter, x1, y1, x2, y1);
-        Shape::drawLine(painter, x1, y1, x1, y2);
-        Shape::drawLine(painter, x1, y2, x2, y2);
-        Shape::drawLine(painter, x2, y1, x2, y2);
+        Shape::drawLine(painter, Shape::rotatePoint(rotateAngel, cx, cy, x1, y1), Shape::rotatePoint(rotateAngel, cx, cy, x2, y1));
+        Shape::drawLine(painter, Shape::rotatePoint(rotateAngel, cx, cy, x1, y1), Shape::rotatePoint(rotateAngel, cx, cy, x1, y2));
+        Shape::drawLine(painter, Shape::rotatePoint(rotateAngel, cx, cy, x1, y2), Shape::rotatePoint(rotateAngel, cx, cy, x2, y2));
+        Shape::drawLine(painter, Shape::rotatePoint(rotateAngel, cx, cy, x2, y1), Shape::rotatePoint(rotateAngel, cx, cy, x2, y2));
 
         if (enBrush)
         {//fill the rectangle
             painter->setPen(brushCol);
             //Scan filling Algorithm
-            for (int i = x_1 + 1; i < x_2; ++i)
+            for (int i = x1 + 1; i < x2; ++i)
             {
-                Shape::drawLine(painter, Shape::rotatePoint(rotateAngel, cx, cy, i, y_1 + 1), Shape::rotatePoint(rotateAngel,cx, cy, i, y_2 - 1));
+                Shape::drawLine(painter, Shape::rotatePoint(rotateAngel, cx, cy, i, y1 + 1), Shape::rotatePoint(rotateAngel,cx, cy, i, y2 - 1));
             }
         }
+
+        if (selected)
+        {
+            QPointF p1 = Shape::rotatePoint(rotateAngel, cx, cy, x1, y1);
+            QPointF p2 = Shape::rotatePoint(rotateAngel, cx, cy, x1, y2);
+            QPointF p3 = Shape::rotatePoint(rotateAngel, cx, cy, x2, y1);
+            QPointF p4 = Shape::rotatePoint(rotateAngel, cx, cy, x2, y2);
+            Shape::drawMarkPoint(painter, p1.x(), p1.y());
+            Shape::drawMarkPoint(painter, p2.x(), p2.y());
+            Shape::drawMarkPoint(painter, p3.x(), p3.y());
+            Shape::drawMarkPoint(painter, p4.x(), p4.y());
+        }
     }
+    rotateAngel = rotation();
+}
+
+void Rectangle::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene* parent = scene();
+    PaintWidget* paintWidget = dynamic_cast<PaintWidget*> (parent);
+    if (!selected)
+    {
+        if (paintWidget == NULL) return;
+
+        if (!paintWidget->isMultiSelecting()) paintWidget->clearSelectedShapes();
+        paintWidget->addSelectedShape(this);
+        paintWidget->setCurrentShape(this);
+        selected = true;
+    }
+    paintWidget->setCurrentShape(this);
+
+    if (event->button() == Qt::LeftButton)
+    {//select this item & move
+        setCursor(Qt::ClosedHandCursor);
+        setEditFlag(Shape::Moving);
+        originRect= rect();
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        QPointF eventPoint = mapFromScene(event->scenePos());
+        if (Shape::eulicdeanDistance(eventPoint, rect().topLeft()) <= lineWidth)
+        {
+            setCursor(Qt::SizeFDiagCursor);
+            setEditFlag(Shape::VertexEditing);
+            fixedPoint = rect().bottomRight();
+        }
+        else if (Shape::eulicdeanDistance(eventPoint, rect().topRight()) <= lineWidth)
+        {
+            setCursor(Qt::SizeBDiagCursor);
+            setEditFlag(Shape::VertexEditing);
+            fixedPoint = rect().bottomLeft();
+        }
+        else if (Shape::eulicdeanDistance(eventPoint, rect().bottomRight()) <= lineWidth)
+        {
+            setCursor(Qt::SizeFDiagCursor);
+            setEditFlag(Shape::VertexEditing);
+            fixedPoint = rect().topLeft();
+        }
+        else if (Shape::eulicdeanDistance(eventPoint, rect().bottomLeft()) <= lineWidth)
+        {
+            setCursor(Qt::SizeBDiagCursor);
+            setEditFlag(Shape::VertexEditing);
+            fixedPoint = rect().topRight();
+        }
+        else if (fabs(eventPoint.x() - rect().left()) <= lineWidth)
+        {
+            setCursor(Qt::SizeHorCursor);
+            setEditFlag(Shape::EdgeEditing);
+            fixedPoint = rect().topRight();
+            originRect = rect();
+        }
+        else if (fabs(eventPoint.x() - rect().right()) <= lineWidth)
+        {
+            setCursor(Qt::SizeHorCursor);
+            setEditFlag(Shape::EdgeEditing);
+            fixedPoint = rect().bottomLeft();
+            originRect = rect();
+        }
+        else if (fabs(eventPoint.y() - rect().top()) <= lineWidth)
+        {
+            setCursor(Qt::SizeVerCursor);
+            setEditFlag(Shape::EdgeEditing);
+            fixedPoint = rect().bottomRight();
+            originRect = rect();
+        }
+        else if (fabs(eventPoint.y() - rect().bottom()) <= lineWidth)
+        {
+            setCursor(Qt::SizeVerCursor);
+            setEditFlag(Shape::EdgeEditing);
+            fixedPoint = rect().topLeft();
+            originRect = rect();
+        }
+    }
+    prepareGeometryChange();
+}
+void Rectangle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (this->editFlag == Shape::Moving)
+    {
+        if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance())
+        {
+              return;
+        }
+
+        QPointF p = originRect.topLeft() + (event->scenePos() - event->buttonDownScenePos(Qt::LeftButton));
+        setRect(p.x(), p.y(), originRect.width(), originRect.height());
+        prepareGeometryChange();
+    }
+    else if (this->editFlag == Shape::VertexEditing)
+    {
+        if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::RightButton)).length() < QApplication::startDragDistance())
+        {
+              return;
+        }
+
+        renew(event);
+    }
+    else if (this->editFlag == Shape::EdgeEditing)
+    {
+        if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::RightButton)).length() < QApplication::startDragDistance())
+        {
+              return;
+        }
+
+        QPointF eventPoint = mapFromScene(event->scenePos());
+        if (fixedPoint == originRect.topRight() || fixedPoint == originRect.bottomLeft())
+        {
+            qreal width = fabs(eventPoint.x() - fixedPoint.x());
+            setRect(MIN_VALUE(fixedPoint.x(), eventPoint.x()), originRect.top(), width, originRect.height());
+        }
+        else
+        {
+            qreal height = fabs(eventPoint.y() - fixedPoint.y());
+            setRect(originRect.left(), MIN_VALUE(eventPoint.y(), fixedPoint.y()), originRect.width(), height);
+        }
+
+        prepareGeometryChange();
+    }
+}
+void Rectangle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    setCursor(Qt::ArrowCursor);
+    clearEditFlag();
+    prepareGeometryChange();
 }

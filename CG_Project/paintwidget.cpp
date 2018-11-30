@@ -16,6 +16,7 @@ PaintWidget::PaintWidget(QWidget *parent) : QGraphicsScene(parent)
 void PaintWidget::setCurrentTool(Shape::Type arg)
 {
     currentTool = arg;
+    clearSelectedShapes();
 }
 
 void PaintWidget::setCurrentPenColor(QPalette arg)
@@ -131,28 +132,16 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             if (currentTool == Shape::SelectTool)
             {
-                QGraphicsItem *ptr = itemAt(event->scenePos(), QTransform());
-                currentShape = dynamic_cast<Shape*>(ptr);
-                if (ptr == NULL && !multiSelecting)
-                {//cancel selecting items
+                if (!multiSelecting)
+                {
+                    currentShape = NULL;
+                }
+                QGraphicsScene::mousePressEvent(event);
+                if (!multiSelecting && currentShape == NULL)
+                {
                     clearSelectedShapes();
                 }
-                else if (currentShape != NULL)
-                {
-                    if (!multiSelecting)
-                    {//cancel selecting items
-                        clearSelectedShapes();
-                    }
-
-                    if (!currentShape->isSelected())
-                    {
-                        currentShape->setSelected(true);
-                        selectedShapes.push_back(currentShape);
-                    }
-                }
             }
-
-            QGraphicsScene::mousePressEvent(event);
         }
     }
 
@@ -197,9 +186,26 @@ void PaintWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void PaintWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
-    case Qt::Key_Control:
+    case Qt::Key_Control: {
         multiSelecting = true;
         break;
+    }
+    case Qt::Key_Delete: {
+        QList<Shape*>::iterator it = selectedShapes.begin();
+        while (it != selectedShapes.end())
+        {
+            QGraphicsItem *item = dynamic_cast<QGraphicsItem*>(*it);
+            if (item != NULL)
+            {
+                this->removeItem(item);
+                delete item;
+            }
+            ++it;
+        }
+        selectedShapes.clear();
+        update();
+        break;
+    }
     default:
         break;
     }
@@ -221,4 +227,16 @@ void PaintWidget::clearSelectedShapes() {
         (*it)->setSelected(false);
     }
     selectedShapes.clear();
+}
+void PaintWidget::addSelectedShape(Shape *arg)
+{
+    selectedShapes.push_back(arg);
+}
+void PaintWidget::setCurrentShape(Shape *arg)
+{
+    currentShape = arg;
+}
+bool PaintWidget::isMultiSelecting()
+{
+    return multiSelecting;
 }

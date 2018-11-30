@@ -10,6 +10,10 @@ class Polygon : public Shape, public QGraphicsPolygonItem
 protected:
     QVector<QPointF> vertexList;
     QPointF tempPoint;
+    //QPointF* editPoint;
+    //QVector<QPointF>::iterator editPoint;
+    int editPoint;
+    QVector<QPointF> originVertex;
 
     struct Edge
     {
@@ -28,6 +32,10 @@ protected:
             return bottomX < right.bottomX;
         }
     };
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public:
     Polygon();

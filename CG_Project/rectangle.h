@@ -1,14 +1,18 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-
 #include <QGraphicsRectItem>
 #include "shape.h"
 
 class Rectangle : public Shape, public QGraphicsRectItem
 {
 protected:
-    QPointF startPoint;
+    QPointF fixedPoint;
+    QRectF originRect;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public:
     Rectangle();
@@ -19,6 +23,7 @@ public:
     void rotate(int angel);
     void vflip();
     void hflip();
+
 };
 
 #endif // RECTANGLE_H

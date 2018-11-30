@@ -197,8 +197,8 @@ QPointF Shape::rotatePoint(qreal angel, qreal cx, qreal cy, QPointF p)
 
 QPointF Shape::rotatePoint(qreal angel, qreal cx, qreal cy, qreal x, qreal y)
 {
-    qreal resx = cx + (x - cx) * cos(angel) - (y - cy) * sin(angel);
-    qreal resy = cy + (x - cx) * sin(angel) + (y - cy) * cos(angel);
+    qreal resx = cx + (x - cx) * cos((angel / 180.0) * PI) - (y - cy) * sin((angel / 180.0) * PI);
+    qreal resy = cy + (x - cx) * sin((angel / 180.0) * PI) + (y - cy) * cos((angel / 180.0) * PI);
     QPointF p(resx, resy);
     return p;
 }
