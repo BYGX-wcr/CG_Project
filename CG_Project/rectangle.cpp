@@ -47,19 +47,26 @@ void Rectangle::hflip()
     prepareGeometryChange();
 }
 
+void Rectangle::scale(qreal factor)
+{
+    qreal cx = rect().center().x();
+    qreal cy = rect().center().y();
+    setRect(QRectF(Shape::scalePoint(scaling, factor, cx, cy, rect().topLeft()), Shape::scalePoint(scaling, factor, cx, cy, rect().bottomRight())));
+    scaling = factor;
+    prepareGeometryChange();
+}
+
 void Rectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(initPen());
+    painter->setWorldMatrixEnabled(false); //close the auto transform
 
-    //painter->rotate(-rotation());
-    rotateAngel = 0;
-    originRect = rect();
-    qreal x1 = (originRect.topLeft()).x();
-    qreal y1 = (originRect.topLeft()).y();
-    qreal x2 = (originRect.bottomRight()).x() - 1;
-    qreal y2 = (originRect.bottomRight()).y() - 1;
-    qreal cx = (originRect.left() + originRect.right()) / 2;
-    qreal cy = (originRect.top() + originRect.bottom()) / 2;
+    qreal x1 = (rect().topLeft()).x();
+    qreal y1 = (rect().topLeft()).y();
+    qreal x2 = (rect().bottomRight()).x() - 1;
+    qreal y2 = (rect().bottomRight()).y() - 1;
+    qreal cx = (rect().left() + rect().right()) / 2;
+    qreal cy = (rect().top() + rect().bottom()) / 2;
 
     if (!(x1 == x2 || y1 == y2))
     {
@@ -90,7 +97,7 @@ void Rectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
             Shape::drawMarkPoint(painter, p4.x(), p4.y());
         }
     }
-    rotateAngel = rotation();
+    painter->setWorldMatrixEnabled(true);
 }
 
 void Rectangle::mousePressEvent(QGraphicsSceneMouseEvent *event)

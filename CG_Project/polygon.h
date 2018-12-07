@@ -49,6 +49,7 @@ public:
     void rotate(int angel);
     void vflip();
     void hflip();
+    void scale(qreal factor);
 
     bool isOcclusive();
 };

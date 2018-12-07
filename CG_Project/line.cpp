@@ -68,6 +68,15 @@ void Line::hflip()
     prepareGeometryChange();
 }
 
+void Line::scale(qreal factor)
+{
+    qreal cx = line().center().x();
+    qreal cy = line().center().y();
+    setLine(QLineF(Shape::scalePoint(scaling, factor, cx, cy, line().p1()), Shape::scalePoint(scaling, factor, cx, cy, line().p2())));
+    scaling = factor;
+    prepareGeometryChange();
+}
+
 void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(initPen());

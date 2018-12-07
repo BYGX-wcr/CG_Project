@@ -711,6 +711,7 @@ qrc_mainresource.cpp: ../CG_Project/mainresource.qrc \
 		../CG_Project/images/vertical-flip.png \
 		../CG_Project/images/pen.png \
 		../CG_Project/images/selection-tool.png \
+		../CG_Project/images/scale-tool.png \
 		../CG_Project/images/polygon.png \
 		../CG_Project/images/rotate-tool.png
 	/home/wcr/Qt5.10.1/5.10.1/gcc_64/bin/rcc -name mainresource ../CG_Project/mainresource.qrc -o qrc_mainresource.cpp
@@ -1800,7 +1801,17 @@ line.o: ../CG_Project/line.cpp ../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
+		../CG_Project/paintwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
+		../CG_Project/ellipse.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
+		../CG_Project/rectangle.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
+		../CG_Project/polygon.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o line.o ../CG_Project/line.cpp
 
 ellipse.o: ../CG_Project/ellipse.cpp ../CG_Project/ellipse.h \
@@ -1925,7 +1936,17 @@ ellipse.o: ../CG_Project/ellipse.cpp ../CG_Project/ellipse.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
+		../CG_Project/paintwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
+		../CG_Project/line.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
+		../CG_Project/rectangle.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
+		../CG_Project/polygon.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ellipse.o ../CG_Project/ellipse.cpp
 
 rectangle.o: ../CG_Project/rectangle.cpp ../CG_Project/rectangle.h \
@@ -2050,7 +2071,17 @@ rectangle.o: ../CG_Project/rectangle.cpp ../CG_Project/rectangle.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
+		../CG_Project/paintwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
+		../CG_Project/line.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
+		../CG_Project/ellipse.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
+		../CG_Project/polygon.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rectangle.o ../CG_Project/rectangle.cpp
 
 polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
@@ -2176,7 +2207,16 @@ polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/paintwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
+		../CG_Project/line.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
+		../CG_Project/ellipse.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
+		../CG_Project/rectangle.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o polygon.o ../CG_Project/polygon.cpp
 
 qrc_mainresource.o: qrc_mainresource.cpp 

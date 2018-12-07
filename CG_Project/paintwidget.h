@@ -23,10 +23,12 @@ public:
     void setCurrentBrushColor(QPalette arg);
     void setPenWidth(int arg);
     void setRotateAngel(int arg);
+    void setScalingFactor(int arg);
     void toggleBrushState(bool checked);
     void rotateShapes();
     void vflipShapes();
     void hflipShapes();
+    void scaleShapes();
 
     int getPenWidth();
     QColor getPenColor();
@@ -54,6 +56,7 @@ private:
     Shape* currentShape;
     QList<Shape*> selectedShapes;
     int rotateAngel;
+    qreal scaling;
 
     //Flags
     bool drawing;

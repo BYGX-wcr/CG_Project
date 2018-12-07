@@ -39,6 +39,7 @@ signals:
     void rotateShapes();
     void vflipShapes();
     void hflipShapes();
+    void scaleShapes();
 
 private:
     PaintWidget *paintWidget;
@@ -52,6 +53,7 @@ private:
     void rotateToolTriggered();
     void vflipToolTriggered();
     void hflipToolTriggered();
+    void scaleToolTriggered();
 
     void openPenColorDialog();
     void openBrushColorDialog();

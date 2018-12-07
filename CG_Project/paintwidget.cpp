@@ -39,6 +39,11 @@ void PaintWidget::setRotateAngel(int arg)
     rotateAngel = arg;
 }
 
+void PaintWidget::setScalingFactor(int arg)
+{
+    scaling = arg / 100.0;
+}
+
 void PaintWidget::toggleBrushState(bool checked)
 {
     enBrush = checked;
@@ -76,6 +81,19 @@ void PaintWidget::hflipShapes()
     while (it != selectedShapes.end())
     {
         (*it)->hflip();
+
+        ++it;
+    }
+
+    update();
+}
+
+void PaintWidget::scaleShapes()
+{
+    QList<Shape*>::iterator it = selectedShapes.begin();
+    while (it != selectedShapes.end())
+    {
+        (*it)->scale(scaling);
 
         ++it;
     }

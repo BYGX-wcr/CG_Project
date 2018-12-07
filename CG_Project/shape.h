@@ -31,7 +31,6 @@ public:
     bool isSelected();
     void setEditFlag(const Shape::EditFlag& arg);
     void clearEditFlag();
-    void drawMarkPoint(QPainter *painter, qreal x, qreal y);
     QPen initPen();
 
     virtual void start(QGraphicsSceneMouseEvent* event) = 0;
@@ -40,20 +39,26 @@ public:
     virtual void rotate(int angel) = 0;
     virtual void vflip() = 0;
     virtual void hflip() = 0;
+    virtual void scale(qreal factor) = 0;
 
     void drawLine(QPainter *painter, qreal x1, qreal y1, qreal x2, qreal y2);
     void drawLine(QPainter *painter, QPointF p1, QPointF p2);
     void drawQudraPoints(QPainter *painter, qreal cx, qreal cy, qreal x, qreal y);
+    void drawMarkPoint(QPainter *painter, QPointF p);
+    void drawMarkPoint(QPainter *painter, qreal x, qreal y);
     static void switchPoint(int& x1, int& y1, int& x2, int& y2);
     static QPointF rotatePoint(qreal angel, qreal cx, qreal cy, QPointF p);
     static QPointF rotatePoint(qreal angel, qreal cx, qreal cy, qreal x, qreal y);
+    static QPointF scalePoint(qreal prev, qreal cur, qreal cx, qreal cy, QPointF p);
+    static QPointF scalePoint(qreal prev, qreal cur, qreal cx, qreal cy, qreal x, qreal y);
     static qreal eulicdeanDistance(QPointF p1, QPointF p2);
 
 protected:
     QColor penCol;
     QColor brushCol;
     uint32_t lineWidth;
-    qreal rotateAngel; //degree measure
+    qreal rotateAngel; //radient measure
+    qreal scaling;
     bool enBrush;
     bool selected;
     Shape::EditFlag editFlag;

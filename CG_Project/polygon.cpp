@@ -73,10 +73,12 @@ void Polygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 void Polygon::fillPolygon(QPainter *painter)
 {
     painter->setPen(brushCol);
-    QVector<QPointF>::iterator it = vertexList.begin();
-    qreal minY = vertexList.front().y();
+    QVector<QPointF> vList = vertexList;
+
+    QVector<QPointF>::iterator it = vList.begin();
+    qreal minY = vList.front().y();
     qreal maxY = minY;
-    while (it != vertexList.end())
+    while (it != vList.end())
     {
         minY = MIN_VALUE(minY, it->y());
         maxY = MAX_VALUE(maxY, it->y());
@@ -85,26 +87,26 @@ void Polygon::fillPolygon(QPainter *painter)
 
     //Build Edge Table
     QVector<QList<Polygon::Edge>> ET(maxY - minY);
-    for (int i = 0; i < vertexList.size() - 1; ++i)
+    for (int i = 0; i < vList.size() - 1; ++i)
     {
-        if (vertexList[i].x() == vertexList[i + 1].x()) continue;
+        if (vList[i].x() == vList[i + 1].x()) continue;
 
         qreal bx;
         qreal ty;
         qreal by;
-        if (vertexList[i].y() > vertexList[i + 1].y())
+        if (vList[i].y() > vList[i + 1].y())
         {
-            bx = vertexList[i + 1].x();
-            ty = vertexList[i].y();
-            by = vertexList[i + 1].y();
+            bx = vList[i + 1].x();
+            ty = vList[i].y();
+            by = vList[i + 1].y();
         }
         else
         {
-            bx = vertexList[i].x();
-            ty = vertexList[i + 1].y();
-            by = vertexList[i].y();
+            bx = vList[i].x();
+            ty = vList[i + 1].y();
+            by = vList[i].y();
         }
-        qreal k = (vertexList[i].x() - vertexList[i + 1].x()) / (vertexList[i].y() - vertexList[i + 1].y());
+        qreal k = (vList[i].x() - vList[i + 1].x()) / (vList[i].y() - vList[i + 1].y());
         Edge e(ty, bx, k);
         ET[ceil(by - minY)].push_back(e);
     }
@@ -131,6 +133,7 @@ void Polygon::fillPolygon(QPainter *painter)
             QList<Edge>::iterator tempIt1 = it;
             QList<Edge>::iterator tempIt2 = it + 1;
             it += 2;
+
             qreal x1 = tempIt1->bottomX;
             qreal x2 = tempIt2->bottomX;
             Shape::drawLine(painter, x1 , i + minY, x2, i + minY);
@@ -192,6 +195,21 @@ void Polygon::hflip()
 
     QPolygonF newPoly(vertexList);
     setPolygon(newPoly);
+    prepareGeometryChange();
+}
+
+void Polygon::scale(qreal factor)
+{
+    qreal cx = (boundingRect().topLeft().x() + boundingRect().bottomRight().x()) / 2;
+    qreal cy = (boundingRect().topLeft().y() + boundingRect().bottomRight().y()) / 2;
+    for (int i = 0; i < vertexList.size(); ++i)
+    {
+        QPointF p(Shape::scalePoint(scaling, factor, cx, cy, vertexList[i]));
+        vertexList[i] = p;
+    }
+
+    setPolygon(QPolygonF(vertexList));
+    scaling = factor;
     prepareGeometryChange();
 }
 
@@ -267,7 +285,7 @@ void Polygon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                   return;
             }
 
-            vertexList[editPoint] = mapFromScene(event->scenePos());
+            if (editPoint < vertexList.size()) vertexList[editPoint] = mapFromScene(event->scenePos());
             if (editPoint == 0) vertexList.back() = vertexList.front();
             setPolygon(QPolygonF(vertexList));
             prepareGeometryChange();

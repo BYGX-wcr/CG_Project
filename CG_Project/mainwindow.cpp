@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, &MainWindow::rotateShapes, paintWidget, &PaintWidget::rotateShapes);
     connect(this, &MainWindow::vflipShapes, paintWidget, &PaintWidget::vflipShapes);
     connect(this, &MainWindow::hflipShapes, paintWidget, &PaintWidget::hflipShapes);
+    connect(this, &MainWindow::scaleShapes, paintWidget, &PaintWidget::scaleShapes);
 
     //Initialize Main Window
     menuBar();
@@ -82,6 +83,22 @@ MainWindow::MainWindow(QWidget *parent) :
     vflipAction->setStatusTip("Flip items horizontally");
     toolBar->addAction(hflipAction);
     connect(hflipAction, &QAction::triggered, this, &MainWindow::hflipToolTriggered);
+
+    QAction *scaleAction = new QAction(QIcon(":/icon/icon-scale-tool"), tr("Scale Tool"), toolBar);
+    scaleAction->setStatusTip("Scale items");
+    toolBar->addAction(scaleAction);
+    connect(scaleAction, &QAction::triggered, this, &MainWindow::scaleToolTriggered);
+    QSpinBox *scaleBox = new QSpinBox(toolBar);
+    scaleBox->setToolTip("Scaling Factor");
+    scaleBox->setStatusTip("Set the Scaling Factor");
+    scaleBox->setFixedWidth(80);
+    scaleBox->setMaximum(400);
+    scaleBox->setMinimum(10);
+    scaleBox->setSuffix(tr("%"));
+    scaleBox->setSingleStep(10);
+    scaleBox->setValue(100);
+    toolBar->addWidget(scaleBox);
+    connect(scaleBox, QOverload<int>::of(&QSpinBox::valueChanged), paintWidget, &PaintWidget::setScalingFactor);
 }
 
 void MainWindow::drawLineTriggered()
@@ -121,6 +138,10 @@ void MainWindow::vflipToolTriggered()
 void MainWindow::hflipToolTriggered()
 {
     emit hflipShapes();
+}
+void MainWindow::scaleToolTriggered()
+{
+    emit scaleShapes();
 }
 
 void MainWindow::openPenColorDialog()

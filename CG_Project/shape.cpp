@@ -6,6 +6,7 @@ Shape::Shape(const QColor& penCol, int lineWidth)
     this->lineWidth = lineWidth;
     this->brushCol = Qt::white;
     rotateAngel = 0;
+    scaling = 1;
     enBrush = false;
     selected = false;
     editFlag = Unedited;
@@ -152,19 +153,15 @@ void Shape::drawLine(QPainter *painter, QPointF p1, QPointF p2)
 
 void Shape::drawQudraPoints(QPainter *painter, qreal cx, qreal cy, qreal x, qreal y)
 {
-    qreal x1 = x * cos(rotateAngel) - y * sin(rotateAngel);
-    qreal y1 = x * sin(rotateAngel) + y * cos(rotateAngel);
-    qreal x2 = -x * cos(rotateAngel) - y * sin(rotateAngel);
-    qreal y2 = -x * sin(rotateAngel) + y * cos(rotateAngel);
-    qreal x3 = x * cos(rotateAngel) + y * sin(rotateAngel);
-    qreal y3 = x * sin(rotateAngel) - y * cos(rotateAngel);
-    qreal x4 = -x * cos(rotateAngel) + y * sin(rotateAngel);
-    qreal y4 = -x * sin(rotateAngel) - y * cos(rotateAngel);
+    painter->drawPoint(Shape::rotatePoint(rotateAngel, cx, cy, x + cx, y + cy));
+    painter->drawPoint(Shape::rotatePoint(rotateAngel, cx, cy, -x + cx, y + cy));
+    painter->drawPoint(Shape::rotatePoint(rotateAngel, cx, cy, x + cx, -y + cy));
+    painter->drawPoint(Shape::rotatePoint(rotateAngel, cx, cy, -x + cx, -y + cy));
+}
 
-    painter->drawPoint(x1 + cx, y1 + cy);
-    painter->drawPoint(x2 + cx, y2 + cy);
-    painter->drawPoint(x3 + cx, y3 + cy);
-    painter->drawPoint(x4 + cx, y4 + cy);
+void Shape::drawMarkPoint(QPainter *painter, QPointF p)
+{
+    Shape::drawMarkPoint(painter, p.x(), p.y());
 }
 
 void Shape::drawMarkPoint(QPainter *painter, qreal x, qreal y)
@@ -201,6 +198,26 @@ QPointF Shape::rotatePoint(qreal angel, qreal cx, qreal cy, qreal x, qreal y)
     qreal resy = cy + (x - cx) * sin((angel / 180.0) * PI) + (y - cy) * cos((angel / 180.0) * PI);
     QPointF p(resx, resy);
     return p;
+}
+
+QPointF Shape::scalePoint(qreal prev, qreal cur, qreal cx, qreal cy, QPointF p)
+{
+    return Shape::scalePoint(prev, cur, cx, cy, p.x(), p.y());
+}
+
+QPointF Shape::scalePoint(qreal prev, qreal cur, qreal cx, qreal cy, qreal x, qreal y)
+{
+    qreal dx = x - cx;
+    qreal dy = y - cy;
+
+    //recover to the origin
+    dx = dx / prev;
+    dy = dy / prev;
+    //scale by current factor
+    dx = dx * cur;
+    dy = dy * cur;
+
+    return QPointF(cx + dx, cy + dy);
 }
 
 qreal Shape::eulicdeanDistance(QPointF p1, QPointF p2)

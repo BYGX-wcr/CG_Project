@@ -47,10 +47,19 @@ void Ellipse::hflip()
     prepareGeometryChange();
 }
 
+void Ellipse::scale(qreal factor)
+{
+    qreal cx = rect().center().x();
+    qreal cy = rect().center().y();
+    setRect(QRectF(Shape::scalePoint(scaling, factor, cx, cy, rect().topLeft()), Shape::scalePoint(scaling, factor, cx, cy, rect().bottomRight())));
+    scaling = factor;
+    prepareGeometryChange();
+}
+
 void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(initPen());
-    rotateAngel = 0;
+    painter->setWorldMatrixEnabled(false); //close the auto transform
 
     qreal x1 = (rect().topLeft()).x();
     qreal y1 = (rect().topLeft()).y();
@@ -76,8 +85,7 @@ void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         int p1 = b2 - a2 * b + a2 / 4.0;
         while (b2 * x < a2 * y)
         {//area1
-            QPointF point = Shape::rotatePoint(rotateAngel, cx, cy, x, y);
-            Shape::drawQudraPoints(painter, cx, cy, point.x(), point.y());
+            Shape::drawQudraPoints(painter, cx, cy, x, y);
             ++x;
             if (p1 >= 0)
             {
@@ -90,8 +98,7 @@ void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         int p2 = b * (x + 0.5) * 2 + a * (y - 1) * 2 - a * b * 2;
         while (y >= 0)
         {//area2
-            QPointF point = Shape::rotatePoint(rotateAngel, cx, cy, x, y);
-            Shape::drawQudraPoints(painter, cx, cy, point.x(), point.y());
+            Shape::drawQudraPoints(painter, cx, cy, x, y);
             --y;
             if (p2 < 0)
             {
@@ -128,8 +135,7 @@ void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         int p1 = b2 - a2 * b + a2 / 4.0;
         while (b2 * x < a2 * y)
         {//area1
-            QPointF point = Shape::rotatePoint(rotateAngel, cx, cy, y, x);
-            Shape::drawQudraPoints(painter, cx, cy, point.x(), point.y());/*KEY*/
+            Shape::drawQudraPoints(painter, cx, cy, y, x);/*KEY*/
             ++x;
             if (p1 >= 0)
             {
@@ -142,8 +148,7 @@ void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         int p2 = b * (x + 0.5) * 2 + a * (y - 1) * 2 - a * b * 2;
         while (y >= 0)
         {//area2
-            QPointF point = Shape::rotatePoint(rotateAngel, cx, cy, y, x);
-            Shape::drawQudraPoints(painter, cx, cy, point.x(), point.y());/*KEY*/
+            Shape::drawQudraPoints(painter, cx, cy, y, x);/*KEY*/
             --y;
             if (p2 < 0)
             {
@@ -169,21 +174,13 @@ void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     }
     if (selected)
     {
-        QPointF p1 = Shape::rotatePoint(rotateAngel, cx, cy, x1, y1);
-        QPointF p2 = Shape::rotatePoint(rotateAngel, cx, cy, x1, y2);
-        QPointF p3 = Shape::rotatePoint(rotateAngel, cx, cy, x2, y1);
-        QPointF p4 = Shape::rotatePoint(rotateAngel, cx, cy, x2, y2);
-        Shape::drawMarkPoint(painter, p1.x(), p1.y());
-        Shape::drawMarkPoint(painter, p2.x(), p2.y());
-        Shape::drawMarkPoint(painter, p3.x(), p3.y());
-        Shape::drawMarkPoint(painter, p4.x(), p4.y());
-        Shape::drawMarkPoint(painter, p1.x(), (p1.y() + p2.y()) / 2);
-        Shape::drawMarkPoint(painter, p3.x(), (p1.y() + p2.y()) / 2);
-        Shape::drawMarkPoint(painter, (p1.x() + p3.x()) / 2, p3.y());
-        Shape::drawMarkPoint(painter, (p1.x() + p3.x()) / 2, p4.y());
+        Shape::drawMarkPoint(painter, Shape::rotatePoint(rotateAngel, cx, cy, x1, (y1 + y2) / 2));
+        Shape::drawMarkPoint(painter, Shape::rotatePoint(rotateAngel, cx, cy, x2, (y1 + y2) / 2));
+        Shape::drawMarkPoint(painter, Shape::rotatePoint(rotateAngel, cx, cy, (x1 + x2) / 2, y1));
+        Shape::drawMarkPoint(painter, Shape::rotatePoint(rotateAngel, cx, cy, (x1 + x2) / 2, y2));
     }
 
-    rotateAngel = rotation();
+    painter->setWorldMatrixEnabled(true);
 }
 
 void Ellipse::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -210,31 +207,7 @@ void Ellipse::mousePressEvent(QGraphicsSceneMouseEvent *event)
     else if (event->button() == Qt::RightButton)
     {
         QPointF eventPoint = mapFromScene(event->scenePos());
-        if (Shape::eulicdeanDistance(eventPoint, rect().topLeft()) <= lineWidth)
-        {
-            setCursor(Qt::SizeFDiagCursor);
-            setEditFlag(Shape::VertexEditing);
-            fixedPoint = rect().bottomRight();
-        }
-        else if (Shape::eulicdeanDistance(eventPoint, rect().topRight()) <= lineWidth)
-        {
-            setCursor(Qt::SizeBDiagCursor);
-            setEditFlag(Shape::VertexEditing);
-            fixedPoint = rect().bottomLeft();
-        }
-        else if (Shape::eulicdeanDistance(eventPoint, rect().bottomRight()) <= lineWidth)
-        {
-            setCursor(Qt::SizeFDiagCursor);
-            setEditFlag(Shape::VertexEditing);
-            fixedPoint = rect().topLeft();
-        }
-        else if (Shape::eulicdeanDistance(eventPoint, rect().bottomLeft()) <= lineWidth)
-        {
-            setCursor(Qt::SizeBDiagCursor);
-            setEditFlag(Shape::VertexEditing);
-            fixedPoint = rect().topRight();
-        }
-        else if (fabs(eventPoint.x() - rect().left()) <= lineWidth)
+        if (fabs(eventPoint.x() - rect().left()) <= lineWidth)
         {
             setCursor(Qt::SizeHorCursor);
             setEditFlag(Shape::EdgeEditing);
@@ -277,15 +250,6 @@ void Ellipse::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QPointF p = originRect.topLeft() + (event->scenePos() - event->buttonDownScenePos(Qt::LeftButton));
         setRect(p.x(), p.y(), originRect.width(), originRect.height());
         prepareGeometryChange();
-    }
-    else if (this->editFlag == Shape::VertexEditing)
-    {
-        if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::RightButton)).length() < QApplication::startDragDistance())
-        {
-              return;
-        }
-
-        renew(event);
     }
     else if (this->editFlag == Shape::EdgeEditing)
     {
