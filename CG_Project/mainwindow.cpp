@@ -61,6 +61,11 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(selectionAction);
     connect(selectionAction, &QAction::triggered, this, &MainWindow::selectionToolTriggered);
 
+    QAction *clipAction = new QAction(QIcon(":/icon/icon-clip-tool"), tr("Clip Tool"), toolBar);
+    clipAction->setStatusTip("Clip tailorable items");
+    toolBar->addAction(clipAction);
+    connect(clipAction, &QAction::triggered, this, &MainWindow::clipToolTriggered);
+
     QAction *rotateAction = new QAction(QIcon(":/icon/icon-rotate-tool"), tr("Rotation Tool"), toolBar);
     rotateAction->setStatusTip("Rotate items");
     toolBar->addAction(rotateAction);
@@ -124,6 +129,11 @@ void MainWindow::drawPolygonTriggered()
 void MainWindow::selectionToolTriggered()
 {
     emit changeCurrentTool(Shape::SelectTool);
+}
+
+void MainWindow::clipToolTriggered()
+{
+    emit changeCurrentTool(Shape::ClipTool);
 }
 
 void MainWindow::rotateToolTriggered()

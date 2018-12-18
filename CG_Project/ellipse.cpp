@@ -61,10 +61,10 @@ void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     painter->setPen(initPen());
     painter->setWorldMatrixEnabled(false); //close the auto transform
 
-    qreal x1 = (rect().topLeft()).x();
-    qreal y1 = (rect().topLeft()).y();
-    qreal x2 = (rect().bottomRight()).x();
-    qreal y2 = (rect().bottomRight()).y();
+    qreal x1 = mapToParent(rect().topLeft()).x();
+    qreal y1 = mapToParent(rect().topLeft()).y();
+    qreal x2 = mapToParent(rect().bottomRight()).x() - 1;
+    qreal y2 = mapToParent(rect().bottomRight()).y() - 1;
 
     if (x1 == x2 || y1 == y2)
         return;

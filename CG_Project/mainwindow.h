@@ -49,7 +49,9 @@ private:
     void drawEllipseTriggered();
     void drawRectTriggered();
     void drawPolygonTriggered();
+
     void selectionToolTriggered();
+    void clipToolTriggered();
     void rotateToolTriggered();
     void vflipToolTriggered();
     void hflipToolTriggered();

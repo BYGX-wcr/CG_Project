@@ -1,8 +1,13 @@
 #include "rectangle.h"
 #include "paintwidget.h"
+#include <QStyleOptionGraphicsItem>
 
-Rectangle::Rectangle()
+Rectangle::Rectangle(Qt::PenStyle psFlag)
 {
+    this->psFlag = psFlag;
+    QPen curPen;
+    curPen.setStyle(psFlag);
+    this->setPen(curPen);
 }
 
 void Rectangle::start(QGraphicsSceneMouseEvent *event)
@@ -58,15 +63,21 @@ void Rectangle::scale(qreal factor)
 
 void Rectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    if (psFlag != Qt::SolidLine)
+    {//indicate that this is a special rect, don't use self-defined function to paint it
+        QGraphicsRectItem::paint(painter, option, widget);
+        return;
+    }
+
     painter->setPen(initPen());
     painter->setWorldMatrixEnabled(false); //close the auto transform
 
-    qreal x1 = (rect().topLeft()).x();
-    qreal y1 = (rect().topLeft()).y();
-    qreal x2 = (rect().bottomRight()).x() - 1;
-    qreal y2 = (rect().bottomRight()).y() - 1;
-    qreal cx = (rect().left() + rect().right()) / 2;
-    qreal cy = (rect().top() + rect().bottom()) / 2;
+    qreal x1 = mapToParent(rect().topLeft()).x();
+    qreal y1 = mapToParent(rect().topLeft()).y();
+    qreal x2 = mapToParent(rect().bottomRight()).x() - 1;
+    qreal y2 = mapToParent(rect().bottomRight()).y() - 1;
+    qreal cx = (x1 + x2) / 2;
+    qreal cy = (y1 + y2) / 2;
 
     if (!(x1 == x2 || y1 == y2))
     {

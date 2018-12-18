@@ -49,14 +49,20 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
 private:
+    //State Variables
     Shape::Type currentTool;
     QColor currentPenColor;
     QColor currentBrushColor;
     int penWidth;
-    Shape* currentShape;
-    QList<Shape*> selectedShapes;
     int rotateAngel;
     qreal scaling;
+
+    //Shape Storage
+    Shape* currentShape;
+    QList<Shape*> selectedShapes;
+
+    //Clip Support
+    Rectangle *clipRect;
 
     //Flags
     bool drawing;

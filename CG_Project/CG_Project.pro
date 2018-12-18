@@ -31,7 +31,8 @@ SOURCES += \
     line.cpp \
     ellipse.cpp \
     rectangle.cpp \
-    polygon.cpp
+    polygon.cpp \
+    clippeditem.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     line.h \
     ellipse.h \
     rectangle.h \
-    polygon.h
+    polygon.h \
+    clippeditem.h
 
 FORMS +=
 

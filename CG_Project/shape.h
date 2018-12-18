@@ -20,12 +20,12 @@ const qreal PI = 3.1415926;
 class Shape
 {
 public:
-    enum Type { SelectTool, Line, Ellipse, Rectangle, Polygon };
+    enum Type { SelectTool, Line, Ellipse, Rectangle, Polygon, ClipTool };
     enum EditFlag { Unedited, Moving, EdgeEditing, VertexEditing };
 
     Shape(const QColor& col = Qt::black, int lineWidth = 1);
     void setPenColor(QColor& arg);
-    void setLineWidth(int& arg);
+    void setLineWidth(const int& arg);
     void setBrush(QColor& arg);
     void setSelected(bool arg);
     bool isSelected();

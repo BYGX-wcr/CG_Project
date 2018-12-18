@@ -17,7 +17,7 @@ void Shape::setPenColor(QColor &arg)
     this->penCol = arg;
 }
 
-void Shape::setLineWidth(int &arg)
+void Shape::setLineWidth(const int &arg)
 {
     this->lineWidth = arg;
 }

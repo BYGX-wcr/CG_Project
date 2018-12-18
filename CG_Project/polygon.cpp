@@ -213,6 +213,92 @@ void Polygon::scale(qreal factor)
     prepareGeometryChange();
 }
 
+QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
+{
+    QVector<ClipPoint> nodeList; //nodes list of the polygon
+    QVector<ClipPoint> winNodeList; //nodes list of the clip window
+
+    //initialize nodeList
+    for (int i = 0; i < vertexList.size() - 1; ++i)
+    {
+        ClipPoint p(vertexList[i]);
+        nodeList.push_back(p);
+    }
+
+    //initialize winNodeList
+    {
+        ClipPoint p1(clipRect.topLeft());
+        ClipPoint p2(clipRect.topRight());
+        ClipPoint p3(clipRect.bottomRight());
+        ClipPoint p4(clipRect.bottomLeft());
+        winNodeList.push_back(p1);
+        winNodeList.push_back(p2);
+        winNodeList.push_back(p3);
+        winNodeList.push_back(p4);
+    }
+
+    QVector<QVector<ClipPoint>> crossingPointsA(nodeList.size()); //nodes list of crossing points at each edge of polygon
+    QVector<QVector<ClipPoint>> crossingPointsB(winNodeList.size()); //nodes list of crossing points at each edge of clip window
+
+    //compute crossing points
+    for (int i = 0; i < winNodeList.size(); ++i)
+    {
+        QLineF boundary(winNodeList[i], winNodeList[(i + 1) % winNodeList.size()]);
+        for (int j = 0; j < nodeList.size() - 1; ++j)
+        {
+            QLineF l(nodeList[j], nodeList[j + 1]);
+
+            QPointF p;
+            if (boundary.intersect(l, &p) == QLineF::BoundedIntersection)
+            {//exist intersection
+                bool check = true;
+                if (boundary.angle() == l.angle())
+                {//special check 1
+                    check = false;
+                }
+
+                if (p == l.p1() || p == l.p2())
+                {//special check 2
+                    Line temp;
+                    temp.setLine(l);
+                    if (!clipRect.intersects(temp.boundingRect()))
+                    {
+                        check = false;
+                    }
+                }
+
+                if (check)
+                {
+                    ClipPoint cp(p, true, j, i);
+                    crossingPointsA[j].push_back(cp);
+                    crossingPointsB[i].push_back(cp);
+                }
+            }
+        }
+    }
+    sort(crossingPointsB[1].begin(), crossingPointsB[1].end(), [](const QPointF& left, const QPointF& right) { return left.x() < right.x()});
+    sort(crossingPointsB[2].begin(), crossingPointsB[2].end(), [](const QPointF& left, const QPointF& right) { return left.y() < right.y()});
+    sort(crossingPointsB[3].begin(), crossingPointsB[3].end(), [](const QPointF& left, const QPointF& right) { return left.x() > right.x()});
+    sort(crossingPointsB[4].begin(), crossingPointsB[4].end(), [](const QPointF& left, const QPointF& right) { return left.y() > right.y()});
+
+    //clip process
+    ClipPoint next = crossingPointsB[1].front();
+    do
+    {
+        if (next.flag)
+        {//a crossing point
+            if (clipRect.contains(nodeList[next.ptrA]))
+            {//exit point
+                //
+            }
+            else
+            {//enter point
+                //
+            }
+        }
+    } while (next != crossingPointsB[1].front());
+}
+
 bool Polygon::isOcclusive()
 {
     if (vertexList.size() >= 3 && vertexList.front() == vertexList.back())

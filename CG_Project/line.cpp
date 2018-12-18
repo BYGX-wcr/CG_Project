@@ -94,6 +94,114 @@ void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
 }
 
+QList<QGraphicsItem*> Line::clip(QRectF clipRect) //based on Liang-Barsky Algorithm
+{
+    QList<QGraphicsItem*> res;
+    qreal dx = line().x2() - line().x1();
+    qreal dy = line().y2() - line().y1();
+    qreal maxY = clipRect.bottom();
+    qreal minY = clipRect.top();
+    qreal maxX = clipRect.right();
+    qreal minX = clipRect.left();
+
+    qreal p1 = -dx;
+    qreal p2 = dx;
+    qreal p3 = -dy;
+    qreal p4 = dy;
+    qreal q1 = line().x1() - minX;
+    qreal q2 = maxX - line().x1();
+    qreal q3 = line().y1() - minY;
+    qreal q4 = maxY - line().y1();
+
+    qreal u1 = 0;
+    qreal u2 = 1;
+
+    //update parameters
+    if (p1 == 0 && q1 * q2 < 0)
+    {//out of range
+        return res;
+    }
+    else if (p1 < 0)
+    {
+        u1 = MAX_VALUE(u1, q1 / p1);
+    }
+    else if (p1 > 0)
+    {
+        u2 = MIN_VALUE(u2, q1 / p1);
+    }
+
+    if (p2 < 0)
+    {
+        u1 = MAX_VALUE(u1, q2 / p2);
+    }
+    else if (p2 > 0)
+    {
+        u2 = MIN_VALUE(u2, q2 / p2);
+    }
+
+    if (p3 == 0 && q3 * q4 < 0)
+    {//out of range
+        return res;
+    }
+    else if (p3 < 0)
+    {
+        u1 = MAX_VALUE(u1, q3 / p3);
+    }
+    else if (p3 > 0)
+    {
+        u2 = MIN_VALUE(u2, q3 / p3);
+    }
+
+    if (p4 < 0)
+    {
+        u1 = MAX_VALUE(u1, q4 / p4);
+    }
+    else if (p4 > 0)
+    {
+        u2 = MIN_VALUE(u2, q4 / p4);
+    }
+
+    //final computation to get the result
+    if (u1 > u2)
+    {//out of range
+        return res;
+    }
+    else
+    {
+        QLineF l1(line().x1() + dx * u1, line().y1() + dy * u1, line().x1() + dx * u2, line().y1() + dy * u2);
+        Line *innerLine = new Line;
+        innerLine->setLine(l1);
+        innerLine->setLineWidth(this->lineWidth);
+        res.push_back(innerLine);
+        PaintWidget* paintWidget = dynamic_cast<PaintWidget*>(this->scene());
+        if (paintWidget != NULL)
+        {//make the new inner line selected
+            innerLine->Shape::setSelected(true);
+            paintWidget->addSelectedShape(innerLine);
+        }
+
+        if (u1 > 0)
+        {//the first out-of-range section
+            QLineF l2(line().x1(), line().y1(), line().x1() + dx * u1, line().y1() + dy * u1);
+            Line *outterLine = new Line;
+            outterLine->setLine(l2);
+            outterLine->setLineWidth(this->lineWidth);
+            res.push_back(outterLine);
+        }
+
+        if (u2 < 1)
+        {//the second out-of-range section
+            QLineF l3(line().x1() + dx * u2, line().y1() + dy * u2, line().x2(), line().y2());
+            Line *outterLine = new Line;
+            outterLine->setLine(l3);
+            outterLine->setLineWidth(this->lineWidth);
+            res.push_back(outterLine);
+        }
+
+        return res;
+    }
+}
+
 void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene* parent = scene();

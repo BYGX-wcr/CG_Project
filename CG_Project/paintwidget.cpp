@@ -11,12 +11,14 @@ PaintWidget::PaintWidget(QWidget *parent) : QGraphicsScene(parent)
     drawing = false;
     enBrush = false;
     multiSelecting = false;
+    clipRect = NULL;
 }
 
 void PaintWidget::setCurrentTool(Shape::Type arg)
 {
     currentTool = arg;
-    clearSelectedShapes();
+    if (currentTool != Shape::SelectTool)
+        clearSelectedShapes();
 }
 
 void PaintWidget::setCurrentPenColor(QPalette arg)
@@ -125,8 +127,32 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!drawing)
     {//generate a new item
-        if (currentTool != Shape::SelectTool)
+        if (currentTool == Shape::SelectTool)
         {
+            if (!multiSelecting)
+            {
+                currentShape = NULL;
+            }
+            QGraphicsScene::mousePressEvent(event);
+            if (!multiSelecting && currentShape == NULL)
+            {
+                clearSelectedShapes();
+            }
+        }
+        else if (currentTool == Shape::ClipTool)
+        {
+            qDebug() << "Clip";
+            clearSelectedShapes();
+            clipRect = new Rectangle(Qt::DashLine);
+            addItem(clipRect);
+            clipRect->start(event);
+            clipRect->setLineWidth(penWidth);
+            drawing = true;
+            currentShape = clipRect;
+        }
+        else
+        {
+            clearSelectedShapes();
             switch(currentTool)
             {
             case Shape::Line: { Line* newItem = new Line; currentShape = newItem; addItem(newItem); break; }
@@ -141,25 +167,12 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 currentShape->start(event);
                 currentShape->setPenColor(currentPenColor);
                 currentShape->setLineWidth(penWidth);
+                currentShape->setSelected(true);
+                addSelectedShape(currentShape);
                 if (enBrush)
                     currentShape->setBrush(currentBrushColor);
             }
             event->accept();
-        }
-        else
-        {
-            if (currentTool == Shape::SelectTool)
-            {
-                if (!multiSelecting)
-                {
-                    currentShape = NULL;
-                }
-                QGraphicsScene::mousePressEvent(event);
-                if (!multiSelecting && currentShape == NULL)
-                {
-                    clearSelectedShapes();
-                }
-            }
         }
     }
 
@@ -192,6 +205,38 @@ void PaintWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     else if (currentTool == Shape::SelectTool)
     {
         QGraphicsScene::mouseReleaseEvent(event);
+    }
+    else if (currentTool == Shape::ClipTool)
+    {
+        this->removeItem(clipRect);
+        QList<QGraphicsItem*> visibleItems = this->items(clipRect->rect());
+        QList<QGraphicsItem*>::iterator it = visibleItems.begin();
+        while (it != visibleItems.end())
+        {
+            ClippedItem* curItem = dynamic_cast<ClippedItem*>(*it);
+            if (curItem != NULL)
+            {//indicate that this item can be clipped
+                QList<QGraphicsItem*> newItems = curItem->clip(clipRect->rect());
+                QList<QGraphicsItem*>::iterator sit = newItems.begin();
+                while (sit != newItems.end()) {
+                    this->addItem(*sit);
+                    ++sit;
+                }
+
+                if (!newItems.empty())
+                {
+                    QGraphicsItem *temp = *it;
+                    this->removeItem(temp);
+                    *it = NULL;
+                    delete temp;
+                }
+            }
+
+            ++it;
+        }
+
+        delete clipRect;
+        drawing = false;
     }
     else
     {
@@ -245,6 +290,7 @@ void PaintWidget::clearSelectedShapes() {
         (*it)->setSelected(false);
     }
     selectedShapes.clear();
+    update();
 }
 void PaintWidget::addSelectedShape(Shape *arg)
 {

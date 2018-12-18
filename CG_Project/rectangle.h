@@ -9,13 +9,14 @@ class Rectangle : public Shape, public QGraphicsRectItem
 protected:
     QPointF fixedPoint;
     QRectF originRect;
+    Qt::PenStyle psFlag;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public:
-    Rectangle();
+    Rectangle(Qt::PenStyle psFlag = Qt::SolidLine);
 
     void start(QGraphicsSceneMouseEvent *event);
     void renew(QGraphicsSceneMouseEvent *event);

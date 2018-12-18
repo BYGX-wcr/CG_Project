@@ -2,19 +2,13 @@
 #define POLYGON_H
 
 #include "shape.h"
+#include "clippeditem.h"
 #include <QGraphicsPolygonItem>
 #include <QVector>
 
-class Polygon : public Shape, public QGraphicsPolygonItem
+class Polygon : public Shape, public QGraphicsPolygonItem, public ClippedItem
 {
 protected:
-    QVector<QPointF> vertexList;
-    QPointF tempPoint;
-    //QPointF* editPoint;
-    //QVector<QPointF>::iterator editPoint;
-    int editPoint;
-    QVector<QPointF> originVertex;
-
     struct Edge
     {
         qreal maxY;
@@ -33,6 +27,25 @@ protected:
         }
     };
 
+    struct ClipPoint : public QPointF
+    {
+        bool flag;
+        int ptrA;
+        int ptrB;
+
+        ClipPoint(const QPointF& p, bool flag = false, int ptr1 = -1, int ptr2 = -1) : QPointF(p)
+        {
+            this->flag = flag;
+            this->ptrA = ptr1;
+            this->ptrB = ptr2;
+        }
+    };
+
+    QVector<QPointF> vertexList;
+    QPointF tempPoint;
+    int editPoint;
+    QVector<QPointF> originVertex;
+
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -50,6 +63,8 @@ public:
     void vflip();
     void hflip();
     void scale(qreal factor);
+
+    QList<QGraphicsItem*> clip(QRectF clipRect);
 
     bool isOcclusive();
 };
