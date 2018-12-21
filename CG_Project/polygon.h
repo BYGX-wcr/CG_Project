@@ -33,7 +33,7 @@ protected:
         int ptrA;
         int ptrB;
 
-        ClipPoint(const QPointF& p, bool flag = false, int ptr1 = -1, int ptr2 = -1) : QPointF(p)
+        ClipPoint(const QPointF& p = QPointF(0, 0), bool flag = false, int ptr1 = -1, int ptr2 = -1) : QPointF(p)
         {
             this->flag = flag;
             this->ptrA = ptr1;

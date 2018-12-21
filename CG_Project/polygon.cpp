@@ -215,14 +215,47 @@ void Polygon::scale(qreal factor)
 
 QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
 {
-    QVector<ClipPoint> nodeList; //nodes list of the polygon
-    QVector<ClipPoint> winNodeList; //nodes list of the clip window
+    QVector<Polygon::ClipPoint> nodeList; //nodes list of the polygon
+    QVector<Polygon::ClipPoint> winNodeList; //nodes list of the clip window
+    QList<QGraphicsItem*> res;
+    if (vertexList.size() < 3)
+        return res;
+
+    //judge whether polygon is clockwise
+    QVector<QPointF>::iterator maxIt = max_element(vertexList.begin(), vertexList.end(), [](const QPointF& left, const QPointF& right){ return left.y() > right.y(); });
+    bool clockwise;
+    if (maxIt == vertexList.end() || maxIt == vertexList.begin())
+    {
+        if (vertexList[1].x() > vertexList[vertexList.size() - 2].x())
+        {
+            clockwise = true;
+        }
+        else
+        {
+            clockwise = false;
+        }
+    }
+    else
+    {
+        if ((maxIt + 1)->x() > (maxIt - 1)->x())
+        {
+            clockwise = true;
+        }
+        else
+        {
+            clockwise = false;
+        }
+    }
 
     //initialize nodeList
-    for (int i = 0; i < vertexList.size() - 1; ++i)
+    for (int i = 0; i < vertexList.size(); ++i)
     {
         ClipPoint p(vertexList[i]);
         nodeList.push_back(p);
+    }
+    if (clockwise == false)
+    {//keep nodeList in clockwise
+        reverse(nodeList.begin(), nodeList.end());
     }
 
     //initialize winNodeList
@@ -237,8 +270,8 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
         winNodeList.push_back(p4);
     }
 
-    QVector<QVector<ClipPoint>> crossingPointsA(nodeList.size()); //nodes list of crossing points at each edge of polygon
-    QVector<QVector<ClipPoint>> crossingPointsB(winNodeList.size()); //nodes list of crossing points at each edge of clip window
+    QVector<QVector<Polygon::ClipPoint>> crossingPointsA(nodeList.size() - 1); //nodes list of crossing points at each edge of polygon
+    QVector<QVector<Polygon::ClipPoint>> crossingPointsB(winNodeList.size()); //nodes list of crossing points at each edge of clip window
 
     //compute crossing points
     for (int i = 0; i < winNodeList.size(); ++i)
@@ -259,7 +292,7 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
 
                 if (p == l.p1() || p == l.p2())
                 {//special check 2
-                    Line temp;
+                    QGraphicsLineItem temp;
                     temp.setLine(l);
                     if (!clipRect.intersects(temp.boundingRect()))
                     {
@@ -276,27 +309,167 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
             }
         }
     }
-    sort(crossingPointsB[1].begin(), crossingPointsB[1].end(), [](const QPointF& left, const QPointF& right) { return left.x() < right.x()});
-    sort(crossingPointsB[2].begin(), crossingPointsB[2].end(), [](const QPointF& left, const QPointF& right) { return left.y() < right.y()});
-    sort(crossingPointsB[3].begin(), crossingPointsB[3].end(), [](const QPointF& left, const QPointF& right) { return left.x() > right.x()});
-    sort(crossingPointsB[4].begin(), crossingPointsB[4].end(), [](const QPointF& left, const QPointF& right) { return left.y() > right.y()});
 
-    //clip process
-    ClipPoint next = crossingPointsB[1].front();
-    do
+    //keep crossing points list in a clockwise order
+    sort(crossingPointsB[0].begin(), crossingPointsB[0].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.x() < right.x(); });
+    sort(crossingPointsB[1].begin(), crossingPointsB[1].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.y() < right.y(); });
+    sort(crossingPointsB[2].begin(), crossingPointsB[2].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.x() > right.x(); });
+    sort(crossingPointsB[3].begin(), crossingPointsB[3].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.y() > right.y(); });
+    for (int i = 0; i < crossingPointsA.size(); ++i)
     {
-        if (next.flag)
-        {//a crossing point
-            if (clipRect.contains(nodeList[next.ptrA]))
-            {//exit point
-                //
+        if (crossingPointsA[i].size() == 2)
+        {
+            qreal dx1 = nodeList[i].x() - nodeList[i + 1].x();
+            qreal dy1 = nodeList[i].y() - nodeList[i + 1].y();
+            qreal dx2 = crossingPointsA[i][0].x() - crossingPointsA[i][1].x();
+            qreal dy2 = crossingPointsA[i][0].y() - crossingPointsA[i][1].y();
+            if (dx1 * dx2 < 0)
+            {
+                swap(crossingPointsA[i][0], crossingPointsA[i][1]);
             }
-            else
-            {//enter point
-                //
+            else if (dx1 * dx2 == 0)
+            {
+                if (dy1 * dy2 < 0)
+                {
+                    swap(crossingPointsA[i][0], crossingPointsA[i][1]);
+                }
             }
         }
-    } while (next != crossingPointsB[1].front());
+        else if (crossingPointsA[i].size() > 2)
+        {
+            qDebug() << "Unknown Error happened in Polygon::clip";
+            exit(0);
+        }
+    }
+
+    QVector<Polygon::ClipPoint> crossingPoints;
+    for (int i = 0; i < crossingPointsA.size(); ++i)
+    {
+        for (int j = 0; j < crossingPointsA[i].size(); ++j)
+        {
+            crossingPoints.push_back(crossingPointsA[i][j]);
+        }
+    }
+
+    //clip process
+    crossingPoints.push_back(crossingPoints.front());
+    QVector<Polygon::ClipPoint>::iterator next = crossingPoints.begin();
+    int Aindex = next->ptrA;
+    int Bindex = next->ptrB;
+
+    QVector<Polygon::ClipPoint>::iterator last = next;
+    Polygon::ClipPoint endPoint = *next;
+    QVector<QPointF> cache;
+    do
+    {
+        cache.push_back(*next);
+        Q_ASSERT(next->flag);
+        bool direction;
+        const bool exitDirection = true;
+        const bool enterDirection = false;
+        if (clipRect.contains(nodeList[next->ptrA]))
+            direction = exitDirection;
+        else
+        {
+            int diff = crossingPointsA[next->ptrA].indexOf(*next);
+            if (diff == 0)
+                direction = enterDirection;
+            else
+                direction = exitDirection;
+        }
+
+        if (direction == exitDirection)
+        {//exit point
+            //trace edges of clip window update next crossing point
+            last = next;
+            next++;
+            QPointF midPoint((last->x() + next->x()) / 2, (last->y() + next->y()) / 2);
+            if (!polygon().containsPoint(midPoint, Qt::OddEvenFill))
+            {//resolve a polygon *******************************************!!!
+                Polygon* newPoly = new Polygon;
+                cache.push_back(cache.front());
+                newPoly->setPolygon(cache);
+                newPoly->vertexList = cache;
+                newPoly->setLineWidth(this->lineWidth);
+                newPoly->setPenColor(this->penCol);
+                newPoly->Shape::setBrush(this->enBrush, this->brushCol);
+                PaintWidget* paintWidget = dynamic_cast<PaintWidget*>(this->scene());
+                if (paintWidget != NULL)
+                {//make the new inner line selected
+                    newPoly->Shape::setSelected(true);
+                    paintWidget->addSelectedShape(newPoly);
+                }
+
+                res.push_back(newPoly);
+                cache.clear();
+            }
+            else if (next->ptrB != last->ptrB && *next != winNodeList[next->ptrB])
+            {//deal with the vertex of clipRect
+                cache.push_back(winNodeList[next->ptrB]);
+            }
+        }
+        else
+        {//enter point
+            last = next;
+            //trace polygon edges to update next crossing point
+            if (*next == crossingPointsA[next->ptrA].back())
+            {
+                Aindex = (next->ptrA + 1) % crossingPointsA.size();
+                next = nodeList.begin();
+                for (int i = 0; i < Aindex; ++i) next++;
+                cache.push_back(*next);
+
+                do
+                {
+                    if (!crossingPointsA[Aindex].empty())
+                    {//meet a crossingPoint
+                        //next = crossingPointsA[Aindex].begin();
+                        next = crossingPoints.begin();
+                        while (next != crossingPoints.end() && *next != crossingPointsA[Aindex].front())
+                            next++;
+                        Q_ASSERT(next != crossingPoints.end());
+                    }
+                    else
+                    {
+                        Aindex = (Aindex + 1) % crossingPointsA.size();
+                        next++;
+                        cache.push_back(*next);
+                    }
+                } while(!next->flag);
+            }
+            else
+            {
+                next++;
+//                int nextIndex = crossingPointsA[next->ptrA].indexOf(*next) + 1;
+//                next = crossingPointsA[next->ptrA].begin();
+//                for (int i = 0; i < nextIndex; ++i) next++;
+            }
+        }
+    } while (*next != endPoint);
+
+    if (!cache.empty())
+    {//deal with the last polygon
+        cache.push_back(*next);
+
+        //resolve a polygon *******************************************!!!
+        Polygon* newPoly = new Polygon;
+        newPoly->setPolygon(cache);
+        newPoly->setLineWidth(this->lineWidth);
+        newPoly->setPenColor(this->penCol);
+        newPoly->Shape::setBrush(this->enBrush, this->brushCol);
+        newPoly->vertexList = cache;
+        PaintWidget* paintWidget = dynamic_cast<PaintWidget*>(this->scene());
+        if (paintWidget != NULL)
+        {//make the new inner line selected
+            newPoly->Shape::setSelected(true);
+            paintWidget->addSelectedShape(newPoly);
+        }
+
+        res.push_back(newPoly);
+        cache.clear();
+    }
+
+    return res;
 }
 
 bool Polygon::isOcclusive()

@@ -22,9 +22,9 @@ void Shape::setLineWidth(const int &arg)
     this->lineWidth = arg;
 }
 
-void Shape::setBrush(QColor& arg)
+void Shape::setBrush(bool en, QColor& arg)
 {
-    enBrush = true;
+    enBrush = en;
     brushCol = arg;
 }
 

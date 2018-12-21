@@ -180,23 +180,23 @@ QList<QGraphicsItem*> Line::clip(QRectF clipRect) //based on Liang-Barsky Algori
             paintWidget->addSelectedShape(innerLine);
         }
 
-        if (u1 > 0)
-        {//the first out-of-range section
-            QLineF l2(line().x1(), line().y1(), line().x1() + dx * u1, line().y1() + dy * u1);
-            Line *outterLine = new Line;
-            outterLine->setLine(l2);
-            outterLine->setLineWidth(this->lineWidth);
-            res.push_back(outterLine);
-        }
+//        if (u1 > 0)
+//        {//the first out-of-range section
+//            QLineF l2(line().x1(), line().y1(), line().x1() + dx * u1, line().y1() + dy * u1);
+//            Line *outterLine = new Line;
+//            outterLine->setLine(l2);
+//            outterLine->setLineWidth(this->lineWidth);
+//            res.push_back(outterLine);
+//        }
 
-        if (u2 < 1)
-        {//the second out-of-range section
-            QLineF l3(line().x1() + dx * u2, line().y1() + dy * u2, line().x2(), line().y2());
-            Line *outterLine = new Line;
-            outterLine->setLine(l3);
-            outterLine->setLineWidth(this->lineWidth);
-            res.push_back(outterLine);
-        }
+//        if (u2 < 1)
+//        {//the second out-of-range section
+//            QLineF l3(line().x1() + dx * u2, line().y1() + dy * u2, line().x2(), line().y2());
+//            Line *outterLine = new Line;
+//            outterLine->setLine(l3);
+//            outterLine->setLineWidth(this->lineWidth);
+//            res.push_back(outterLine);
+//        }
 
         return res;
     }

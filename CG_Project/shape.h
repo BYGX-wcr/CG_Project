@@ -26,7 +26,7 @@ public:
     Shape(const QColor& col = Qt::black, int lineWidth = 1);
     void setPenColor(QColor& arg);
     void setLineWidth(const int& arg);
-    void setBrush(QColor& arg);
+    void setBrush(bool en, QColor& arg);
     void setSelected(bool arg);
     bool isSelected();
     void setEditFlag(const Shape::EditFlag& arg);

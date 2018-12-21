@@ -170,7 +170,7 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 currentShape->setSelected(true);
                 addSelectedShape(currentShape);
                 if (enBrush)
-                    currentShape->setBrush(currentBrushColor);
+                    currentShape->setBrush(true, currentBrushColor);
             }
             event->accept();
         }
