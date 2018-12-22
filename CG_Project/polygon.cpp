@@ -248,7 +248,7 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
     }
 
     //initialize nodeList
-    for (int i = 0; i < vertexList.size(); ++i)
+    for (int i = 0; i < vertexList.size() - 1; ++i)
     {
         ClipPoint p(vertexList[i]);
         nodeList.push_back(p);
@@ -257,6 +257,18 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
     {//keep nodeList in clockwise
         reverse(nodeList.begin(), nodeList.end());
     }
+    if (clipRect.left() < this->boundingRect().left())
+    {//synchronize
+        QVector<QPointF>::iterator rightIt = max_element(vertexList.begin(), vertexList.end(), [](const QPointF& left, const QPointF& right){ return left.x() < right.x(); });
+        Polygon::ClipPoint newStart(*rightIt);
+        while (nodeList[0] != newStart)
+        {
+            Polygon::ClipPoint temp = nodeList[0];
+            nodeList.pop_front();
+            nodeList.push_back(temp);
+        }
+    }
+    nodeList.push_back(nodeList.front());
 
     //initialize winNodeList
     {
@@ -350,12 +362,35 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
             crossingPoints.push_back(crossingPointsA[i][j]);
         }
     }
+    if (crossingPoints.empty())
+        return res;
+
+    QVector<Polygon::ClipPoint> listA; //combine nodeList with crossingPointsA
+    for (int i = 0; i < crossingPointsA.size(); ++i)
+    {
+        listA.push_back(nodeList[i]);
+        for (int j = 0; j < crossingPointsA[i].size(); ++j)
+        {
+            listA.push_back(crossingPointsA[i][j]);
+        }
+    }
+    QVector<Polygon::ClipPoint> listB; //combine winNodeList with crossingPointsB
+    for (int i = 0; i < crossingPointsB.size(); ++i)
+    {
+        listB.push_back(winNodeList[i]);
+        for (int j = 0; j < crossingPointsB[i].size(); ++j)
+        {
+            listB.push_back(crossingPointsB[i][j]);
+        }
+    }
 
     //clip process
-    crossingPoints.push_back(crossingPoints.front());
-    QVector<Polygon::ClipPoint>::iterator next = crossingPoints.begin();
-    int Aindex = next->ptrA;
-    int Bindex = next->ptrB;
+    int delta = 1;
+    QVector<Polygon::ClipPoint>::iterator next = listA.begin();
+    while (!next->flag) next++;
+    QVector<Polygon::ClipPoint>::iterator checkPtr = next + 1;
+    while (!checkPtr->flag) checkPtr++;
+    if (find(listB.begin(), listB.end(), *checkPtr) < find(listB.begin(), listB.end(), *next)) delta = -1;
 
     QVector<Polygon::ClipPoint>::iterator last = next;
     Polygon::ClipPoint endPoint = *next;
@@ -381,11 +416,64 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
         if (direction == exitDirection)
         {//exit point
             //trace edges of clip window update next crossing point
+            if (*next == crossingPoints.back()) break;
+            next = find(listB.begin(), listB.end(), *next);
+            last = next;
+            next += delta;
+            if (next == listB.end()) next = listB.begin();
+
+            if (*next == endPoint)
+                break;
+            else if (!next->flag)
+            {//deal with vertex of clipRect
+                do
+                {
+                    cache.push_back(*next);
+                    if (next == listB.begin() && delta == -1) next = listB.end();
+                    next += delta;
+                    if (next == listB.end()) next = listB.begin();
+                } while (!next->flag);
+            }
+            else
+            {
+                QPointF midPoint((last->x() + next->x()) / 2, (last->y() + next->y()) / 2);
+                if (!polygon().containsPoint(midPoint, Qt::OddEvenFill))
+                {//resolve a polygon *******************************************!!!
+                    Polygon* newPoly = new Polygon;
+                    cache.push_back(cache.front());
+                    newPoly->setPolygon(cache);
+                    newPoly->vertexList = cache;
+                    newPoly->setLineWidth(this->lineWidth);
+                    newPoly->setPenColor(this->penCol);
+                    newPoly->Shape::setBrush(this->enBrush, this->brushCol);
+                    PaintWidget* paintWidget = dynamic_cast<PaintWidget*>(this->scene());
+                    if (paintWidget != NULL)
+                    {//make the new inner line selected
+                        newPoly->Shape::setSelected(true);
+                        paintWidget->addSelectedShape(newPoly);
+                    }
+
+                    res.push_back(newPoly);
+                    cache.clear();
+                }
+            }
+        }
+        else
+        {//enter point
+            next = find(listA.begin(), listA.end(), *next);
             last = next;
             next++;
-            QPointF midPoint((last->x() + next->x()) / 2, (last->y() + next->y()) / 2);
-            if (!polygon().containsPoint(midPoint, Qt::OddEvenFill))
-            {//resolve a polygon *******************************************!!!
+            if (next == listA.end()) next = listA.begin();
+            //trace polygon edges to update next crossing point
+            while (!next->flag)
+            {
+                cache.push_back(*next);
+                next++;
+                if (next == listA.end()) next = listA.begin();
+            }
+
+            if (next < last)
+            {//recover
                 Polygon* newPoly = new Polygon;
                 cache.push_back(cache.front());
                 newPoly->setPolygon(cache);
@@ -402,54 +490,21 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
 
                 res.push_back(newPoly);
                 cache.clear();
-            }
-            else if (next->ptrB != last->ptrB && *next != winNodeList[next->ptrB])
-            {//deal with the vertex of clipRect
-                cache.push_back(winNodeList[next->ptrB]);
-            }
-        }
-        else
-        {//enter point
-            last = next;
-            //trace polygon edges to update next crossing point
-            if (*next == crossingPointsA[next->ptrA].back())
-            {
-                Aindex = (next->ptrA + 1) % crossingPointsA.size();
-                next = nodeList.begin();
-                for (int i = 0; i < Aindex; ++i) next++;
-                cache.push_back(*next);
 
-                do
-                {
-                    if (!crossingPointsA[Aindex].empty())
-                    {//meet a crossingPoint
-                        //next = crossingPointsA[Aindex].begin();
-                        next = crossingPoints.begin();
-                        while (next != crossingPoints.end() && *next != crossingPointsA[Aindex].front())
-                            next++;
-                        Q_ASSERT(next != crossingPoints.end());
-                    }
-                    else
-                    {
-                        Aindex = (Aindex + 1) % crossingPointsA.size();
-                        next++;
-                        cache.push_back(*next);
-                    }
-                } while(!next->flag);
-            }
-            else
-            {
-                next++;
-//                int nextIndex = crossingPointsA[next->ptrA].indexOf(*next) + 1;
-//                next = crossingPointsA[next->ptrA].begin();
-//                for (int i = 0; i < nextIndex; ++i) next++;
+                next = last;
+
+                if (*next == crossingPoints.back()) break;
+                next = find(listB.begin(), listB.end(), *next);
+                last = next;
+                next += delta;
+                if (next == listB.end()) next = listB.begin();
             }
         }
     } while (*next != endPoint);
 
     if (!cache.empty())
     {//deal with the last polygon
-        cache.push_back(*next);
+        cache.push_back(cache.front());
 
         //resolve a polygon *******************************************!!!
         Polygon* newPoly = new Polygon;
