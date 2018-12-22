@@ -5,10 +5,15 @@ Polygon::Polygon()
 {
 
 }
+Polygon::Polygon(QVector<QPointF> arg)
+{
+    vertexList = arg;
+}
 
 void Polygon::start(QGraphicsSceneMouseEvent *event)
 {
     vertexList.push_back(mapFromScene(event->scenePos()));
+    tempPoint = vertexList.front();
     QPolygonF newPoly(vertexList);
     setPolygon(newPoly);
 }
@@ -26,6 +31,9 @@ void Polygon::renew(QGraphicsSceneMouseEvent *event)
 void Polygon::addVertex(QGraphicsSceneMouseEvent *event)
 {
     QPointF curPoint = mapFromScene(event->scenePos());
+    tempPoint = curPoint;
+    if (vertexList.size() == 1 && Shape::eulicdeanDistance(vertexList.front(), curPoint) < lineWidth) return; //prevent from touching by mistake
+
     if (Shape::eulicdeanDistance(curPoint, vertexList.front()) < 5 * this->lineWidth)
     {
         vertexList.push_back(vertexList.front());
@@ -74,6 +82,11 @@ void Polygon::fillPolygon(QPainter *painter)
 {
     painter->setPen(brushCol);
     QVector<QPointF> vList = vertexList;
+    for (int i = 0; i < vList.size(); ++i)
+    {
+        vList[i].setX(vertexList[i].toPoint().x());
+        vList[i].setY(vertexList[i].toPoint().y());
+    }
 
     QVector<QPointF>::iterator it = vList.begin();
     qreal minY = vList.front().y();
@@ -215,8 +228,8 @@ void Polygon::scale(qreal factor)
 
 QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
 {
-    QVector<Polygon::ClipPoint> nodeList; //nodes list of the polygon
-    QVector<Polygon::ClipPoint> winNodeList; //nodes list of the clip window
+    QVector<ClippedItem::ClipPoint> nodeList; //nodes list of the polygon
+    QVector<ClippedItem::ClipPoint> winNodeList; //nodes list of the clip window
     QList<QGraphicsItem*> res;
     if (vertexList.size() < 3)
         return res;
@@ -260,10 +273,10 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
     if (clipRect.left() < this->boundingRect().left())
     {//synchronize
         QVector<QPointF>::iterator rightIt = max_element(vertexList.begin(), vertexList.end(), [](const QPointF& left, const QPointF& right){ return left.x() < right.x(); });
-        Polygon::ClipPoint newStart(*rightIt);
+        ClippedItem::ClipPoint newStart(*rightIt);
         while (nodeList[0] != newStart)
         {
-            Polygon::ClipPoint temp = nodeList[0];
+            ClippedItem::ClipPoint temp = nodeList[0];
             nodeList.pop_front();
             nodeList.push_back(temp);
         }
@@ -282,8 +295,8 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
         winNodeList.push_back(p4);
     }
 
-    QVector<QVector<Polygon::ClipPoint>> crossingPointsA(nodeList.size() - 1); //nodes list of crossing points at each edge of polygon
-    QVector<QVector<Polygon::ClipPoint>> crossingPointsB(winNodeList.size()); //nodes list of crossing points at each edge of clip window
+    QVector<QVector<ClippedItem::ClipPoint>> crossingPointsA(nodeList.size() - 1); //nodes list of crossing points at each edge of polygon
+    QVector<QVector<ClippedItem::ClipPoint>> crossingPointsB(winNodeList.size()); //nodes list of crossing points at each edge of clip window
 
     //compute crossing points
     for (int i = 0; i < winNodeList.size(); ++i)
@@ -323,10 +336,10 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
     }
 
     //keep crossing points list in a clockwise order
-    sort(crossingPointsB[0].begin(), crossingPointsB[0].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.x() < right.x(); });
-    sort(crossingPointsB[1].begin(), crossingPointsB[1].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.y() < right.y(); });
-    sort(crossingPointsB[2].begin(), crossingPointsB[2].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.x() > right.x(); });
-    sort(crossingPointsB[3].begin(), crossingPointsB[3].end(), [](const Polygon::ClipPoint& left, const Polygon::ClipPoint& right) { return left.y() > right.y(); });
+    sort(crossingPointsB[0].begin(), crossingPointsB[0].end(), [](const ClippedItem::ClipPoint& left, const ClippedItem::ClipPoint& right) { return left.x() < right.x(); });
+    sort(crossingPointsB[1].begin(), crossingPointsB[1].end(), [](const ClippedItem::ClipPoint& left, const ClippedItem::ClipPoint& right) { return left.y() < right.y(); });
+    sort(crossingPointsB[2].begin(), crossingPointsB[2].end(), [](const ClippedItem::ClipPoint& left, const ClippedItem::ClipPoint& right) { return left.x() > right.x(); });
+    sort(crossingPointsB[3].begin(), crossingPointsB[3].end(), [](const ClippedItem::ClipPoint& left, const ClippedItem::ClipPoint& right) { return left.y() > right.y(); });
     for (int i = 0; i < crossingPointsA.size(); ++i)
     {
         if (crossingPointsA[i].size() == 2)
@@ -354,7 +367,7 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
         }
     }
 
-    QVector<Polygon::ClipPoint> crossingPoints;
+    QVector<ClippedItem::ClipPoint> crossingPoints;
     for (int i = 0; i < crossingPointsA.size(); ++i)
     {
         for (int j = 0; j < crossingPointsA[i].size(); ++j)
@@ -365,7 +378,7 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
     if (crossingPoints.empty())
         return res;
 
-    QVector<Polygon::ClipPoint> listA; //combine nodeList with crossingPointsA
+    QVector<ClippedItem::ClipPoint> listA; //combine nodeList with crossingPointsA
     for (int i = 0; i < crossingPointsA.size(); ++i)
     {
         listA.push_back(nodeList[i]);
@@ -374,7 +387,7 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
             listA.push_back(crossingPointsA[i][j]);
         }
     }
-    QVector<Polygon::ClipPoint> listB; //combine winNodeList with crossingPointsB
+    QVector<ClippedItem::ClipPoint> listB; //combine winNodeList with crossingPointsB
     for (int i = 0; i < crossingPointsB.size(); ++i)
     {
         listB.push_back(winNodeList[i]);
@@ -386,14 +399,17 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
 
     //clip process
     int delta = 1;
-    QVector<Polygon::ClipPoint>::iterator next = listA.begin();
+    QVector<ClippedItem::ClipPoint>::iterator next = listA.begin();
     while (!next->flag) next++;
-    QVector<Polygon::ClipPoint>::iterator checkPtr = next + 1;
-    while (!checkPtr->flag) checkPtr++;
-    if (find(listB.begin(), listB.end(), *checkPtr) < find(listB.begin(), listB.end(), *next)) delta = -1;
+    if (vertexList.size() != 5)
+    {
+        QVector<ClippedItem::ClipPoint>::iterator checkPtr = next + 1;
+        while (!checkPtr->flag) checkPtr++;
+        if (find(listB.begin(), listB.end(), *checkPtr) < find(listB.begin(), listB.end(), *next)) delta = -1;
+    }
 
-    QVector<Polygon::ClipPoint>::iterator last = next;
-    Polygon::ClipPoint endPoint = *next;
+    QVector<ClippedItem::ClipPoint>::iterator last = next;
+    ClippedItem::ClipPoint endPoint = *next;
     QVector<QPointF> cache;
     do
     {
@@ -416,7 +432,7 @@ QList<QGraphicsItem*> Polygon::clip(QRectF clipRect)
         if (direction == exitDirection)
         {//exit point
             //trace edges of clip window update next crossing point
-            if (*next == crossingPoints.back()) break;
+            if (*next == crossingPoints.back() && vertexList.size() != 5) break;
             next = find(listB.begin(), listB.end(), *next);
             last = next;
             next += delta;

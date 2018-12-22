@@ -3,8 +3,9 @@
 
 #include <QGraphicsRectItem>
 #include "shape.h"
+#include "clippeditem.h"
 
-class Rectangle : public Shape, public QGraphicsRectItem
+class Rectangle : public Shape, public QGraphicsRectItem, public ClippedItem
 {
 protected:
     QPointF fixedPoint;
@@ -25,6 +26,8 @@ public:
     void vflip();
     void hflip();
     void scale(qreal factor);
+
+    QList<QGraphicsItem *> clip(QRectF clipRect);
 };
 
 #endif // RECTANGLE_H

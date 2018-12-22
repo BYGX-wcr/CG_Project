@@ -48,6 +48,11 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(drawPloygonAction);
     connect(drawPloygonAction, &QAction::triggered, this, &MainWindow::drawPolygonTriggered);
 
+    QAction *drawCurveAction = new QAction(QIcon(":/icon/icon-curve"), tr("&Curve"), toolBar);
+    drawPloygonAction->setStatusTip("Draw a Curve");
+    toolBar->addAction(drawCurveAction);
+    connect(drawCurveAction, &QAction::triggered, this, &MainWindow::drawCurveTriggered);
+
     QAction *brushToolAction = new QAction(QIcon(":/icon/icon-brush-tool"), tr("&ToolSettings"), toolBar);
     brushToolAction->setStatusTip("Set options of the Pen & Brush");
     toolBar->addAction(brushToolAction);
@@ -108,22 +113,27 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::drawLineTriggered()
 {
-    emit changeCurrentTool(Shape::Line);
+    emit changeCurrentTool(Shape::LineTool);
 }
 
 void MainWindow::drawEllipseTriggered()
 {
-    emit changeCurrentTool(Shape::Ellipse);
+    emit changeCurrentTool(Shape::EllipseTool);
 }
 
 void MainWindow::drawRectTriggered()
 {
-    emit changeCurrentTool(Shape::Rectangle);
+    emit changeCurrentTool(Shape::RectangleTool);
 }
 
 void MainWindow::drawPolygonTriggered()
 {
-    emit changeCurrentTool(Shape::Polygon);
+    emit changeCurrentTool(Shape::PolygonTool);
+}
+
+void MainWindow::drawCurveTriggered()
+{
+    emit changeCurrentTool(Shape::CurveTool);
 }
 
 void MainWindow::selectionToolTriggered()

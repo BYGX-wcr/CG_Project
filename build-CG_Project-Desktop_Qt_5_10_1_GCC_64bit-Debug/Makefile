@@ -58,7 +58,8 @@ SOURCES       = ../CG_Project/main.cpp \
 		../CG_Project/ellipse.cpp \
 		../CG_Project/rectangle.cpp \
 		../CG_Project/polygon.cpp \
-		../CG_Project/clippeditem.cpp qrc_mainresource.cpp \
+		../CG_Project/clippeditem.cpp \
+		../CG_Project/curve.cpp qrc_mainresource.cpp \
 		moc_mainwindow.cpp \
 		moc_paintwidget.cpp
 OBJECTS       = main.o \
@@ -70,6 +71,7 @@ OBJECTS       = main.o \
 		rectangle.o \
 		polygon.o \
 		clippeditem.o \
+		curve.o \
 		qrc_mainresource.o \
 		moc_mainwindow.o \
 		moc_paintwidget.o
@@ -263,7 +265,8 @@ DIST          = ../../Qt5.10.1/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../CG_Project/ellipse.h \
 		../CG_Project/rectangle.h \
 		../CG_Project/polygon.h \
-		../CG_Project/clippeditem.h ../CG_Project/main.cpp \
+		../CG_Project/clippeditem.h \
+		../CG_Project/curve.h ../CG_Project/main.cpp \
 		../CG_Project/mainwindow.cpp \
 		../CG_Project/shape.cpp \
 		../CG_Project/paintwidget.cpp \
@@ -271,7 +274,8 @@ DIST          = ../../Qt5.10.1/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../CG_Project/ellipse.cpp \
 		../CG_Project/rectangle.cpp \
 		../CG_Project/polygon.cpp \
-		../CG_Project/clippeditem.cpp
+		../CG_Project/clippeditem.cpp \
+		../CG_Project/curve.cpp
 QMAKE_TARGET  = CG_Project
 DESTDIR       = 
 TARGET        = CG_Project
@@ -676,8 +680,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../CG_Project/mainresource.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../Qt5.10.1/5.10.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../CG_Project/mainwindow.h ../CG_Project/shape.h ../CG_Project/paintwidget.h ../CG_Project/line.h ../CG_Project/ellipse.h ../CG_Project/rectangle.h ../CG_Project/polygon.h ../CG_Project/clippeditem.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../CG_Project/main.cpp ../CG_Project/mainwindow.cpp ../CG_Project/shape.cpp ../CG_Project/paintwidget.cpp ../CG_Project/line.cpp ../CG_Project/ellipse.cpp ../CG_Project/rectangle.cpp ../CG_Project/polygon.cpp ../CG_Project/clippeditem.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../CG_Project/mainwindow.h ../CG_Project/shape.h ../CG_Project/paintwidget.h ../CG_Project/line.h ../CG_Project/ellipse.h ../CG_Project/rectangle.h ../CG_Project/polygon.h ../CG_Project/clippeditem.h ../CG_Project/curve.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../CG_Project/main.cpp ../CG_Project/mainwindow.cpp ../CG_Project/shape.cpp ../CG_Project/paintwidget.cpp ../CG_Project/line.cpp ../CG_Project/ellipse.cpp ../CG_Project/rectangle.cpp ../CG_Project/polygon.cpp ../CG_Project/clippeditem.cpp ../CG_Project/curve.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -712,6 +716,7 @@ qrc_mainresource.cpp: ../CG_Project/mainresource.qrc \
 		../CG_Project/images/palette.png \
 		../CG_Project/images/rectangle.png \
 		../CG_Project/images/brush-tool.png \
+		../CG_Project/images/curve.png \
 		../CG_Project/images/horizontal-flip.png \
 		../CG_Project/images/vertical-flip.png \
 		../CG_Project/images/pen.png \
@@ -902,6 +907,7 @@ moc_mainwindow.cpp: ../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QMainWindow \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h \
 		../CG_Project/mainwindow.h \
 		moc_predefs.h \
 		../../Qt5.10.1/5.10.1/gcc_64/bin/moc
@@ -1041,6 +1047,7 @@ moc_paintwidget.cpp: ../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSce
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h \
 		../CG_Project/paintwidget.h \
 		moc_predefs.h \
 		../../Qt5.10.1/5.10.1/gcc_64/bin/moc
@@ -1234,7 +1241,8 @@ main.o: ../CG_Project/main.cpp ../CG_Project/mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../CG_Project/main.cpp
 
 mainwindow.o: ../CG_Project/mainwindow.cpp ../CG_Project/mainwindow.h \
@@ -1410,6 +1418,7 @@ mainwindow.o: ../CG_Project/mainwindow.cpp ../CG_Project/mainwindow.h \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h \
 		ui_mainwindow.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVariant \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QButtonGroup \
@@ -1691,7 +1700,8 @@ paintwidget.o: ../CG_Project/paintwidget.cpp ../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o paintwidget.o ../CG_Project/paintwidget.cpp
 
 line.o: ../CG_Project/line.cpp ../CG_Project/line.h \
@@ -1828,7 +1838,8 @@ line.o: ../CG_Project/line.cpp ../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o line.o ../CG_Project/line.cpp
 
 ellipse.o: ../CG_Project/ellipse.cpp ../CG_Project/ellipse.h \
@@ -1965,7 +1976,8 @@ ellipse.o: ../CG_Project/ellipse.cpp ../CG_Project/ellipse.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
+		../CG_Project/curve.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ellipse.o ../CG_Project/ellipse.cpp
 
 rectangle.o: ../CG_Project/rectangle.cpp ../CG_Project/rectangle.h \
@@ -2091,32 +2103,19 @@ rectangle.o: ../CG_Project/rectangle.cpp ../CG_Project/rectangle.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
+		../CG_Project/clippeditem.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsItem \
 		../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
-		../CG_Project/clippeditem.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsItem \
 		../CG_Project/ellipse.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
 		../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QStyleOptionGraphicsItem \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qstyleoption.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qabstractspinbox.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvalidator.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qregularexpression.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qicon.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qslider.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qabstractslider.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qstyle.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtabbar.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtabwidget.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qrubberband.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qframe.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qabstractitemmodel.h
+		../CG_Project/curve.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rectangle.o ../CG_Project/rectangle.cpp
 
 polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
@@ -2240,20 +2239,21 @@ polygon.o: ../CG_Project/polygon.cpp ../CG_Project/polygon.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
+		../CG_Project/clippeditem.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QVector \
 		../CG_Project/paintwidget.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QKeyEvent \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QWidget \
 		../CG_Project/line.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsLineItem \
-		../CG_Project/clippeditem.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsItem \
 		../CG_Project/ellipse.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
 		../CG_Project/rectangle.h \
-		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsRectItem \
+		../CG_Project/curve.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o polygon.o ../CG_Project/polygon.cpp
 
 clippeditem.o: ../CG_Project/clippeditem.cpp ../CG_Project/clippeditem.h \
@@ -2346,6 +2346,131 @@ clippeditem.o: ../CG_Project/clippeditem.cpp ../CG_Project/clippeditem.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixelformat.h \
 		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtransform.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clippeditem.o ../CG_Project/clippeditem.cpp
+
+curve.o: ../CG_Project/curve.cpp ../CG_Project/curve.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtguiglobal.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qglobal.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qconfig.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtcore-config.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsystemdetection.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qprocessordetection.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtypeinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsysinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlogging.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qflags.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qatomic.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qbasicatomic.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qgenericatomic.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qglobalstatic.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmutex.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qnumeric.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qversiontagging.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtgui-config.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qnamespace.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstring.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qchar.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qbytearray.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrefcount.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qarraydata.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringliteral.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringalgorithms.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringview.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringbuilder.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlist.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qalgorithms.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qiterator.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qhashfunctions.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qpair.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qbytearraylist.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringlist.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qregexp.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qstringmatcher.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qscopedpointer.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmetatype.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qobject_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvariant.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmap.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdebug.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qhash.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qtextstream.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qiodevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qlocale.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qshareddata.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qvector.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qpoint.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qset.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qrect.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qmargins.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qsize.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainterpath.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qmatrix.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpolygon.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qregion.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qdatastream.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qline.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixmap.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpaintdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcolor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qrgb.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qrgba64.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qimage.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpixelformat.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtransform.h \
+		../CG_Project/shape.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QApplication \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qcursor.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qwidget.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpalette.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qbrush.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfont.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontmetrics.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qfontinfo.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qkeysequence.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurl.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qurlquery.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfile.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/qfiledevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qvector2d.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtouchdevice.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qguiapplication.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qinputmethod.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsScene \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpen.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/QGraphicsSceneMouseEvent \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QPainter \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qpainter.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/qtextoption.h \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtCore/QDebug \
+		../../Qt5.10.1/5.10.1/gcc_64/include/QtGui/QCursor
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o curve.o ../CG_Project/curve.cpp
 
 qrc_mainresource.o: qrc_mainresource.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_mainresource.o qrc_mainresource.cpp

@@ -2,7 +2,7 @@
 
 PaintWidget::PaintWidget(QWidget *parent) : QGraphicsScene(parent)
 {
-    currentTool = Shape::Line;
+    currentTool = Shape::LineTool;
     currentPenColor = Qt::black;
     currentBrushColor = Qt::blue;
     currentShape = NULL;
@@ -141,7 +141,6 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
         else if (currentTool == Shape::ClipTool)
         {
-            qDebug() << "Clip";
             clearSelectedShapes();
             clipRect = new Rectangle(Qt::DashLine);
             addItem(clipRect);
@@ -155,10 +154,11 @@ void PaintWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
             clearSelectedShapes();
             switch(currentTool)
             {
-            case Shape::Line: { Line* newItem = new Line; currentShape = newItem; addItem(newItem); break; }
-            case Shape::Ellipse: { Ellipse* newItem = new Ellipse; currentShape = newItem; addItem(newItem); break; }
-            case Shape::Rectangle: { Rectangle* newItem = new Rectangle; currentShape = newItem; addItem(newItem); break; }
-            case Shape::Polygon: { Polygon* newItem = new Polygon; currentShape = newItem; addItem(newItem); break;}
+            case Shape::LineTool: { Line* newItem = new Line; currentShape = newItem; addItem(newItem); break; }
+            case Shape::EllipseTool: { Ellipse* newItem = new Ellipse; currentShape = newItem; addItem(newItem); break; }
+            case Shape::RectangleTool: { Rectangle* newItem = new Rectangle; currentShape = newItem; addItem(newItem); break; }
+            case Shape::PolygonTool: { Polygon* newItem = new Polygon; currentShape = newItem; addItem(newItem); break; }
+            case Shape::CurveTool: { Curve* newItem = new Curve; currentShape = newItem; addItem(newItem); break; }
             }
 
             if (currentShape != NULL)
@@ -193,11 +193,20 @@ void PaintWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 }
 void PaintWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (currentTool == Shape::Polygon)
+    if (currentTool == Shape::PolygonTool)
     {
         Polygon* newPolygon = static_cast<Polygon *>(currentShape);
         newPolygon->addVertex(event);
         if (newPolygon->isOcclusive())
+        {
+            drawing = false;
+        }
+    }
+    else if (currentTool == Shape::CurveTool)
+    {
+        Curve* newCurve = static_cast<Curve *>(currentShape);
+        newCurve->addVertex(event);
+        if (event->button() == Qt::RightButton)
         {
             drawing = false;
         }

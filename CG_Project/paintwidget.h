@@ -10,6 +10,7 @@
 #include "ellipse.h"
 #include "rectangle.h"
 #include "polygon.h"
+#include "curve.h"
 
 class PaintWidget : public QGraphicsScene
 {

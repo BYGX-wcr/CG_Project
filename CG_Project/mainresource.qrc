@@ -13,5 +13,6 @@
         <file alias="icon-vertical-flip">images/vertical-flip.png</file>
         <file alias="icon-scale-tool">images/scale-tool.png</file>
         <file alias="icon-clip-tool">images/clip-tool.png</file>
+        <file alias="icon-curve">images/curve.png</file>
     </qresource>
 </RCC>

@@ -20,7 +20,7 @@ const qreal PI = 3.1415926;
 class Shape
 {
 public:
-    enum Type { SelectTool, Line, Ellipse, Rectangle, Polygon, ClipTool };
+    enum Type { SelectTool, LineTool, EllipseTool, RectangleTool, PolygonTool, CurveTool, ClipTool };
     enum EditFlag { Unedited, Moving, EdgeEditing, VertexEditing };
 
     Shape(const QColor& col = Qt::black, int lineWidth = 1);

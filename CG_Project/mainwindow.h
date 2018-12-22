@@ -49,6 +49,7 @@ private:
     void drawEllipseTriggered();
     void drawRectTriggered();
     void drawPolygonTriggered();
+    void drawCurveTriggered();
 
     void selectionToolTriggered();
     void clipToolTriggered();
