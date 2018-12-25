@@ -14,5 +14,7 @@
         <file alias="icon-scale-tool">images/scale-tool.png</file>
         <file alias="icon-clip-tool">images/clip-tool.png</file>
         <file alias="icon-curve">images/curve.png</file>
+        <file alias="icon-export">images/export.png</file>
+        <file alias="icon-3d">images/3d.png</file>
     </qresource>
 </RCC>

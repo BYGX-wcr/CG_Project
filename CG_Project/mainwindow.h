@@ -16,6 +16,7 @@
 #include <QColorDialog>
 #include "paintwidget.h"
 #include "shape.h"
+#include "glwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -57,6 +58,9 @@ private:
     void vflipToolTriggered();
     void hflipToolTriggered();
     void scaleToolTriggered();
+
+    void exportView();
+    void display3DModel();
 
     void openPenColorDialog();
     void openBrushColorDialog();

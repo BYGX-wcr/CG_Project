@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +33,8 @@ SOURCES += \
     rectangle.cpp \
     polygon.cpp \
     clippeditem.cpp \
-    curve.cpp
+    curve.cpp \
+    glwindow.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +45,8 @@ HEADERS += \
     rectangle.h \
     polygon.h \
     clippeditem.h \
-    curve.h
+    curve.h \
+    glwindow.h
 
 FORMS +=
 

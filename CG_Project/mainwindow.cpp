@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -109,6 +111,19 @@ MainWindow::MainWindow(QWidget *parent) :
     scaleBox->setValue(100);
     toolBar->addWidget(scaleBox);
     connect(scaleBox, QOverload<int>::of(&QSpinBox::valueChanged), paintWidget, &PaintWidget::setScalingFactor);
+
+    //Initialize the File Tool Bar
+    toolBar = addToolBar(tr("&File Tools"));
+
+    QAction *exportAction = new QAction(QIcon(":/icon/icon-export"), tr("Export The Image"), toolBar);
+    exportAction->setStatusTip("Save the image as a png file");
+    toolBar->addAction(exportAction);
+    connect(exportAction, &QAction::triggered, this, &MainWindow::exportView);
+
+    QAction *display3DAction = new QAction(QIcon(":/icon/icon-3d"), tr("Display a 3d model"), toolBar);
+    display3DAction->setStatusTip("Display a 3D model");
+    toolBar->addAction(display3DAction);
+    connect(display3DAction, &QAction::triggered, this, &MainWindow::display3DModel);
 }
 
 void MainWindow::drawLineTriggered()
@@ -162,6 +177,26 @@ void MainWindow::hflipToolTriggered()
 void MainWindow::scaleToolTriggered()
 {
     emit scaleShapes();
+}
+void MainWindow::exportView()
+{
+    QPixmap image = centralWidget()->grab();
+
+    QString path = QFileDialog::getSaveFileName(this, tr("Export Image"));
+
+    if (image.save(path))
+        QMessageBox::information(this, "Success", tr("The image has been saved successfully!"));
+    else
+        QMessageBox::warning(this, "Error", tr("Some errors occured when saving the image!"));
+}
+void MainWindow::display3DModel()
+{
+    QString path = QFileDialog::getOpenFileName(this, tr("Open a OFF file"), "../3D Models", tr("Model Files (*.off)"));
+    if (path.size() == 0)
+        return;
+
+    GLWindow *w = new GLWindow(path);
+    w->show();
 }
 
 void MainWindow::openPenColorDialog()
