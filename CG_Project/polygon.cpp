@@ -99,10 +99,10 @@ void Polygon::fillPolygon(QPainter *painter)
     }
 
     //Build Edge Table
-    QVector<QList<Polygon::Edge>> ET(maxY - minY);
+    QVector<QList<Polygon::Edge>> ET(maxY - minY + 1);
     for (int i = 0; i < vList.size() - 1; ++i)
     {
-        if (vList[i].x() == vList[i + 1].x()) continue;
+        if (vList[i].y() == vList[i + 1].y()) continue;
 
         qreal bx;
         qreal ty;
@@ -121,7 +121,9 @@ void Polygon::fillPolygon(QPainter *painter)
         }
         qreal k = (vList[i].x() - vList[i + 1].x()) / (vList[i].y() - vList[i + 1].y());
         Edge e(ty, bx, k);
-        ET[ceil(by - minY)].push_back(e);
+
+        int index = ceil(by - minY);
+        ET[index].push_back(e);
     }
     for (int i = 0; i < ET.size(); ++i)
     {//Enforce Order in every bucket
@@ -140,27 +142,36 @@ void Polygon::fillPolygon(QPainter *painter)
 
         sort(AET.begin(), AET.end());
 
-        QList<Edge>::iterator it = AET.begin();
-        while (AET.end() - it >= 2)
+        int index = 0;
+        while (AET.length() - index >= 2)
         {
-            QList<Edge>::iterator tempIt1 = it;
-            QList<Edge>::iterator tempIt2 = it + 1;
-            it += 2;
+            Edge& e1 = AET[index];
+            Edge& e2 = AET[index + 1];
 
-            qreal x1 = tempIt1->bottomX;
-            qreal x2 = tempIt2->bottomX;
+            qreal x1 = e1.bottomX;
+            qreal x2 = e2.bottomX;
+            Q_ASSERT(x1 <= x2);
             Shape::drawLine(painter, x1 , i + minY, x2, i + minY);
 
             //update edge pair
-            if (tempIt1->maxY <= (minY + i + 1))
-                AET.erase(tempIt1);
+            int flag = 0;
+            if (e1.maxY <= (minY + i + 1))
+            {
+                AET.removeAt(index);
+                ++flag;
+            }
             else
-                tempIt1->bottomX = tempIt1->bottomX + tempIt1->slope;
+                e1.bottomX += e1.slope;
 
-            if (tempIt2->maxY == (minY + i + 1))
-                AET.erase(tempIt2);
+            if (e2.maxY <= (minY + i + 1))
+            {
+                AET.removeAt(index + 1 - flag);
+                ++flag;
+            }
             else
-                tempIt2->bottomX = tempIt2->bottomX + tempIt2->slope;
+                e2.bottomX += e2.slope;
+
+            index += 2 - flag;
         }
     }
 }

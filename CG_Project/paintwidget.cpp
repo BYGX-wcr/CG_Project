@@ -8,6 +8,7 @@ PaintWidget::PaintWidget(QWidget *parent) : QGraphicsScene(parent)
     currentShape = NULL;
     penWidth = 2;
     rotateAngel = 0;
+    scaling = 1;
     drawing = false;
     enBrush = false;
     multiSelecting = false;
@@ -18,7 +19,10 @@ void PaintWidget::setCurrentTool(Shape::Type arg)
 {
     currentTool = arg;
     if (currentTool != Shape::SelectTool)
+    {
         clearSelectedShapes();
+        drawing = false;
+    }
 }
 
 void PaintWidget::setCurrentPenColor(QPalette arg)
@@ -182,7 +186,8 @@ void PaintWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (drawing)
     {
-        currentShape->renew(event);
+        if (currentShape != NULL)
+            currentShape->renew(event);
     }
     else if (currentTool == Shape::SelectTool)
     {

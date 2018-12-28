@@ -46,6 +46,8 @@ private:
     PaintWidget *paintWidget;
     QWidget* activeWidget;
 
+    QLabel *toolLabel;
+
     void drawLineTriggered();
     void drawEllipseTriggered();
     void drawRectTriggered();
@@ -65,7 +67,7 @@ private:
     void openPenColorDialog();
     void openBrushColorDialog();
     void openBrushDialog();
-    void judgeBrushState(bool checked);
+    void setToolLabel(Shape::Type arg);
 };
 
 #endif // MAINWINDOW_H
